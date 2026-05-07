@@ -1,18 +1,44 @@
-# Procesamiento de Señales Biomédicas: Filtros Digitales para EMG, EKG y EEG
 
-Este repositorio contiene la descripción y ejemplos de implementación de 5 tipos de filtros digitales esenciales para el procesamiento de señales electromiográficas (EMG), electrocardiográficas (ECG) y electroencefalográficas (EEG).
+# Procesamiento de Señales Biomédicas y EMG Capacitivas: Filtros Digitales de Ultra Bajo Consumo
+
+Este repositorio contiene la descripción e implementación de filtros digitales utilizados en señales biomédicas como EMG, ECG y EEG, incluyendo arquitecturas optimizadas para sensores electromiográficos capacitivos de ultra bajo consumo.
+
+Además de los filtros clásicos utilizados en bioseñales, se incorpora una metodología basada en el paper:
+
+> Roland, T., Amsuess, S., Russold, M. F., & Baumgartner, W. (2019). *Ultra-Low-Power Digital Filtering for Insulated EMG Sensing*. Sensors, 19(4), 959.
+
+El documento diferencia claramente entre:
+
+- **Filtros digitales clásicos**
+- **Filtros IIR en punto fijo para microcontroladores**
+- **Algoritmos de decisión STFT para detección de artefactos**
 
 ---
 
-## 1. Filtro Pasa Altas (High-Pass Filter)
+# 1. Filtro Pasa Altas (High-Pass Filter)
 
-**Descripción:**
-Se utiliza para eliminar la **deriva de línea de base (baseline wander)**. Este ruido es de baja frecuencia y suele ser causado por la respiración del paciente, el movimiento de los electrodos o cambios en la impedancia de la piel.
+## Descripción
 
-* **Frecuencias de ruido:** Generalmente por debajo de 0.5 - 1 Hz en ECG/EEG y hasta 10-20 Hz en EMG (artefactos de movimiento).
-* **Sustento Científico:** *Akhbari, M., et al. (2013). "A Hierarchical Method for Removal of Baseline Drift from Biomedical Signals".*
+Se utiliza para eliminar la **deriva de línea de base (baseline wander)** y artefactos de movimiento de baja frecuencia.
 
-### Ejemplo en Python
+En EMG capacitivos, el paper demuestra que los artefactos mecánicos son tan severos que la frecuencia de corte debe elevarse hasta **60 Hz** para garantizar estabilidad en prótesis mioeléctricas.
+
+- **Frecuencias de ruido:**  
+  - ECG/EEG: < 0.5–1 Hz  
+  - EMG convencional: 10–20 Hz  
+  - EMG capacitivo: 0–20 Hz (artefactos dinámicos)
+
+## Sustento Científico
+
+1. Akhbari, M., et al. (2013).  
+   *A Hierarchical Method for Removal of Baseline Drift from Biomedical Signals.*
+
+2. Roland, T., et al. (2019).  
+   *Ultra-Low-Power Digital Filtering for Insulated EMG Sensing.*
+
+---
+
+## Implementación Normal (Punto Flotante)
 
 ```python
 import numpy as np
@@ -21,92 +47,264 @@ from scipy import signal
 def highpass_filter(data, cutoff=0.5, fs=1000, order=5):
     nyq = 0.5 * fs
     normal_cutoff = cutoff / nyq
-    b, a = signal.butter(order, normal_cutoff, btype='high', analog=False)
+    b, a = signal.butter(order, normal_cutoff, btype='high')
     return signal.filtfilt(b, a, data)
+````
+
+---
+
+## Implementación del Paper (Punto Fijo IIR)
+
+```python
+def paper_fixed_point_highpass(data_in, a, b):
+    """
+    Implementación Fixed-Point basada en el paper.
+    Coeficientes escalados en formato Q2.10
+    """
+    n = len(data_in)
+
+    center = np.zeros(n, dtype=np.int32)
+    data_out = np.zeros(n, dtype=np.int16)
+
+    for k in range(2, n):
+        center[k] = (
+            a[0]*data_in[k]
+            - a[1]*center[k-1]
+            - a[2]*center[k-2]
+        ) >> 10
+
+        data_out[k] = (
+            b[0]*center[k]
+            + b[1]*center[k-1]
+            + b[2]*center[k-2]
+        ) >> 10
+
+    return data_out
 ```
 
 ---
 
-## 2. Filtro Pasa Bajos (Low-Pass Filter)
+# 2. Filtro Pasa Bajos (Low-Pass Filter)
 
-**Descripción:**
-Diseñado para atenuar el ruido de alta frecuencia, como la interferencia electromagnética de equipos cercanos, ruido térmico o el ruido muscular cruzado (en el caso de EEG/ECG). También previene el *aliasing* antes de la digitalización.
+## Descripción
 
-* **Frecuencias de ruido:** Por encima de 50-70 Hz en EEG, 100-150 Hz en ECG y 500 Hz en EMG.
-* **Sustento Científico:** *Sharma, A., et al. (2016). "Modeling of EXG (ECG, EMG and EEG) non-idealities using MATLAB". IEEE Xplore.*
+Atenúa ruido de alta frecuencia y también se utiliza como detector de envolvente tras la rectificación EMG.
 
-### Ejemplo en Python
+En el paper aparecen dos configuraciones:
+
+1. **531 Hz:** eliminación de ruido térmico/electromagnético
+2. **3.1 Hz:** suavizado de la envolvente muscular
+
+## Sustento Científico
+
+1. Sharma, A., et al. (2016).
+   *Modeling of EXG (ECG, EMG and EEG) non-idealities using MATLAB.*
+
+2. Roland, T., et al. (2019).
+   *Ultra-Low-Power Digital Filtering for Insulated EMG Sensing.*
+
+---
+
+## Implementación Normal (Punto Flotante)
 
 ```python
 def lowpass_filter(data, cutoff=150, fs=1000, order=5):
     nyq = 0.5 * fs
     normal_cutoff = cutoff / nyq
-    b, a = signal.butter(order, normal_cutoff, btype='low', analog=False)
+
+    b, a = signal.butter(order, normal_cutoff, btype='low')
+
     return signal.filtfilt(b, a, data)
 ```
 
 ---
 
-## 3. Filtro Notch (Rechaza Banda)
+## Filtro de Suavizado del Paper (Punto Fijo)
 
-**Descripción:**
-Elimina específicamente la interferencia de la línea eléctrica (*Power-line Interference*). En el contexto de Perú, esta interferencia ocurre a los 60 Hz. Es crítico porque esta frecuencia se encuentra justo dentro del espectro de interés de la mayoría de las bioseñales.
+```python
+def paper_fixed_point_lowpass(data_in, c_scaled=1022):
+    """
+    c_scaled = 0.9981 * 1024 (Q1.10)
+    """
+    n = len(data_in)
 
-* **Frecuencias de ruido:** 60 Hz (y sus armónicos: 120 Hz, 180 Hz).
-* **Sustento Científico:** *Piskorowski, J. (2012). "Powerline interference rejection from sEMG signal using notch filter with transient suppression". IEEE.*
+    y = np.zeros(n, dtype=np.int32)
+    out = np.zeros(n, dtype=np.int16)
 
-### Ejemplo en Python
+    for k in range(1, n):
+
+        y[k] = (
+            (data_in[k] + y[k-1]) * c_scaled
+        ) >> 10
+
+        out[k] = y[k] >> 8
+
+    return out
+```
+
+---
+
+# 3. Filtro Notch / Comb (Rechaza Banda)
+
+## Descripción
+
+Elimina la interferencia de línea eléctrica (*Power-Line Interference*).
+
+En Perú y muchos países americanos la frecuencia es:
+
+* **60 Hz**
+* Armónicos: 120 Hz, 180 Hz
+
+El paper propone un filtro Butterworth de ancho 5 Hz para tolerar fluctuaciones de red eléctrica sin introducir inestabilidad.
+
+## Sustento Científico
+
+1. Piskorowski, J. (2012).
+   *Powerline interference rejection from sEMG signal using notch filter with transient suppression.*
+
+2. Roland, T., et al. (2019).
+   *Ultra-Low-Power Digital Filtering for Insulated EMG Sensing.*
+
+---
+
+## Implementación Normal (Scipy)
 
 ```python
 def notch_filter(data, f0=60.0, fs=1000, Q=30):
+
     b, a = signal.iirnotch(f0, Q, fs)
+
     return signal.filtfilt(b, a, data)
 ```
 
 ---
 
-## 4. Filtro Pasa Banda (Band-Pass Filter)
-
-**Descripción:**
-Permite aislar una banda de frecuencia específica donde se concentra la mayor potencia de la señal fisiológica, eliminando simultáneamente ruidos por debajo y por encima de dicha banda. Es ideal para extraer el complejo QRS en ECG o ritmos específicos en EEG.
-
-* **Frecuencias de interés:** 0.5-100 Hz (ECG), 0.5-40 Hz (EEG), 20-500 Hz (EMG).
-* **Sustento Científico:** *Jirapong, P., et al. (2025). "High-Order Universal Filter for Bio-Signal Processing Applications". MDPI Applied Sciences.*
-
-### Ejemplo en Python
+## Implementación Fixed-Point del Paper
 
 ```python
-def bandpass_filter(data, lowcut=0.5, highcut=40.0, fs=1000, order=5):
+def paper_fixed_point_comb(data_in, a, b):
+
+    n = len(data_in)
+
+    center = np.zeros(n, dtype=np.int32)
+    data_out = np.zeros(n, dtype=np.int16)
+
+    for k in range(400, n):
+
+        center_val = (
+            a[0]*data_in[k]
+            - a[200]*center[k-200]
+            - a[400]*center[k-400]
+        ) >> 10
+
+        center[k] = center_val
+
+        out_val = (
+            b[0]*center[k]
+            + b[200]*center[k-200]
+            + b[400]*center[k-400]
+        ) >> 10
+
+        data_out[k] = np.clip(out_val, -32768, 32767)
+
+    return data_out
+```
+
+---
+
+# 4. Filtro Pasa Banda (Band-Pass Filter)
+
+## Descripción
+
+Permite aislar la banda fisiológica de interés eliminando simultáneamente componentes de baja y alta frecuencia.
+
+Aplicaciones típicas:
+
+* ECG: extracción QRS
+* EEG: ritmos neuronales
+* EMG: activación muscular
+
+## Frecuencias de interés
+
+* ECG: 0.5–100 Hz
+* EEG: 0.5–40 Hz
+* EMG: 20–500 Hz
+
+## Sustento Científico
+
+Jirapong, P., et al. (2025).
+*High-Order Universal Filter for Bio-Signal Processing Applications.*
+
+---
+
+## Implementación en Python
+
+```python
+def bandpass_filter(data,
+                    lowcut=0.5,
+                    highcut=40.0,
+                    fs=1000,
+                    order=5):
+
     nyq = 0.5 * fs
+
     low = lowcut / nyq
     high = highcut / nyq
-    b, a = signal.butter(order, [low, high], btype='band')
+
+    b, a = signal.butter(
+        order,
+        [low, high],
+        btype='band'
+    )
+
     return signal.filtfilt(b, a, data)
 ```
 
 ---
 
-## 5. Filtro Adaptativo (Adaptive Filter)
+# 5. Filtro Adaptativo (Adaptive Filter)
 
-**Descripción:**
-A diferencia de los filtros fijos, los adaptativos ajustan sus coeficientes dinámicamente. Son extremadamente efectivos para suprimir artefactos de movimiento no estacionarios donde el espectro del ruido se solapa con el de la señal.
+## Descripción
 
-* **Frecuencias de ruido:** Variable, típicamente artefactos de movimiento entre 0-20 Hz que cambian con la actividad del sujeto.
-* **Sustento Científico:** *Xu, L., et al. (2022). "Motion-artifact reduction in capacitive heart-rate measurements by adaptive filtering". IEEE.*
+Los filtros adaptativos ajustan dinámicamente sus coeficientes para cancelar artefactos no estacionarios.
 
-### Ejemplo en Python (LMS simplificado)
+Son particularmente útiles cuando:
+
+* El espectro del ruido se superpone con la señal
+* Existen artefactos mecánicos variables
+* El movimiento del usuario cambia continuamente
+
+## Sustento Científico
+
+Xu, L., et al. (2022).
+*Motion-artifact reduction in capacitive heart-rate measurements by adaptive filtering.*
+
+---
+
+## Implementación LMS Simplificada
 
 ```python
-def adaptive_lms_filter(signal_in, noise_ref, mu=0.01, order=32):
+def adaptive_lms_filter(signal_in,
+                        noise_ref,
+                        mu=0.01,
+                        order=32):
+
     n = len(signal_in)
+
     w = np.zeros(order)
+
     output = np.zeros(n)
 
     for i in range(order, n):
+
         x = noise_ref[i-order:i][::-1]
+
         y = np.dot(w, x)
+
         e = signal_in[i] - y
+
         w = w + 2 * mu * e * x
+
         output[i] = e
 
     return output
@@ -114,11 +312,82 @@ def adaptive_lms_filter(signal_in, noise_ref, mu=0.01, order=32):
 
 ---
 
-## Bibliografía
+# 6. Anexo: Algoritmo de Decisión STFT
 
-1. Akhbari, M., et al. (2013). *A Hierarchical Method for Removal of Baseline Drift from Biomedical Signals: Application in ECG Analysis*. PMC.
-2. Sharma, A., et al. (2016). *Modeling of EXG (ECG, EMG and EEG) non-idealities using MATLAB*. IEEE Xplore.
-3. Piskorowski, J. (2012). *Powerline interference rejection from sEMG signal using notch filter with transient suppression*. IEEE International Instrumentation and Measurement Technology Conference.
-4. Jirapong, P., et al. (2025). *0.5-V High-Order Universal Filter for Bio-Signal Processing Applications*. MDPI Applied Sciences.
-5. Xu, L., et al. (2022). *Motion-artifact reduction in capacitive heart-rate measurements by adaptive filtering*. IEEE.
+## Descripción
+
+El paper introduce un algoritmo basado en **Transformada de Fourier de Corto Tiempo (STFT)** para distinguir:
+
+* Contracciones musculares reales
+* Artefactos mecánicos violentos
+
+La STFT NO forma parte de los filtros digitales principales.
+
+Es un bloque independiente de decisión.
+
+La lógica consiste en:
+
+1. Calcular el espectro actual
+2. Compararlo contra una contracción de referencia
+3. Medir la diferencia espectral
+4. Desactivar temporalmente la prótesis si la diferencia excede un umbral
+
+---
+
+## Implementación en Python
+
+```python
+from scipy.signal import stft
+
+def stft_decision_algorithm(signal_window,
+                            reference_spectrum,
+                            fs=1000,
+                            threshold=500):
+
+    f, t, Zxx = stft(
+        signal_window,
+        fs,
+        nperseg=128,
+        noverlap=64
+    )
+
+    current_spectrum = np.mean(
+        np.abs(Zxx),
+        axis=1
+    )
+
+    difference_sum = np.sum(
+        np.abs(current_spectrum - reference_spectrum)
+    )
+
+    if difference_sum > threshold:
+        return "ARTEFACTO: Motor Desactivado"
+
+    return "CONTRACCIÓN: Motor Activado"
+```
+
+---
+
+# Bibliografía
+
+1. Akhbari, M., et al. (2013).
+   *A Hierarchical Method for Removal of Baseline Drift from Biomedical Signals.*
+
+2. Sharma, A., et al. (2016).
+   *Modeling of EXG (ECG, EMG and EEG) non-idealities using MATLAB.*
+
+3. Piskorowski, J. (2012).
+   *Powerline interference rejection from sEMG signal using notch filter with transient suppression.*
+
+4. Jirapong, P., et al. (2025).
+   *High-Order Universal Filter for Bio-Signal Processing Applications.*
+
+5. Xu, L., et al. (2022).
+   *Motion-artifact reduction in capacitive heart-rate measurements by adaptive filtering.*
+
+6. Roland, T., Amsuess, S., Russold, M. F., & Baumgartner, W. (2019).
+   *Ultra-Low-Power Digital Filtering for Insulated EMG Sensing. Sensors, 19(4), 959.*
+
+
+
 
