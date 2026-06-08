@@ -571,27 +571,6 @@ Si el repositorio es público, se recomienda subir únicamente datos anonimizado
 
 ---
 
-## Créditos
-
-Proyecto desarrollado como parte del curso de Señales Biomédicas.
-
-### Integrantes
-
-* Integrante 1
-* Integrante 2
-* Integrante 3
-* Integrante 4
-
-### Docente
-
-* Nombre del docente
-
-### Universidad
-
-* Nombre de la universidad
-
----
-
 ## Referencias
 
 * Cohen, S., Kamarck, T., & Mermelstein, R. (1983). A global measure of perceived stress. *Journal of Health and Social Behavior, 24*(4), 385–396.
