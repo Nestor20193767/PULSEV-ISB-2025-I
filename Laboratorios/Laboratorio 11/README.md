@@ -59,7 +59,6 @@ La adquisición piloto fue realizada en **3 estudiantes universitarios**.
 | P02          | Realizado | Realizado       | Realizado    | Aplicado | Aplicado |
 | P03          | Realizado | Realizado       | Realizado    | Aplicado | Aplicado |
 
-> Los participantes fueron identificados mediante códigos anónimos para proteger su identidad.
 
 ---
 
@@ -91,7 +90,7 @@ Agregar aquí una imagen o esquema de la colocación de electrodos:
 ```markdown
 ![Colocación de electrodos](docs/images/electrode_placement.png)
 ```
-<!-- Ruta sugerida del archivo: docs/images/electrode_placement.png -->
+
 
 ---
 
@@ -99,7 +98,7 @@ Agregar aquí una imagen o esquema de la colocación de electrodos:
 
 El protocolo se desarrolló en una única sesión experimental con registro continuo de ECG durante tres fases consecutivas.
 
-Agregar aquí el protocolo:
+Protocolo:
 
 ```markdown
 ![Colocación del archivo del protocolo]
@@ -115,16 +114,8 @@ Agregar aquí el protocolo:
 
 ### Diagrama del protocolo
 
-Agregar aquí una línea de tiempo del protocolo:
-
 ```markdown
 ![Línea de tiempo del protocolo](docs/images/protocol_timeline.png)
-```
-
-Ruta sugerida:
-
-```bash
-docs/images/protocol_timeline.png
 ```
 
 Ejemplo de línea de tiempo:
@@ -150,7 +141,7 @@ El objetivo de esta fase fue obtener una línea base fisiológica para comparar 
 
 ### Señal sugerida para agregar
 
-Agregar una imagen de ejemplo de la señal ECG basal:
+Agregar una imagen de la señal ECG basal de los 3 participantes:
 
 ```markdown
 ![ECG basal](figures/ecg_basal_example.png)
@@ -176,13 +167,13 @@ Al finalizar la tarea cognitiva, el participante completó el cuestionario **NAS
 
 ### Señales e imágenes sugeridas
 
-Agregar una imagen de ejemplo de la señal ECG durante la tarea cognitiva:
+Agregar una imagen de la señal ECG durante la tarea cognitiva de los participantes:
 
 ```markdown
 ![ECG durante tarea cognitiva](figures/ecg_cognitive_task_example.png)
 ```
 
-Agregar una captura o esquema de la tarea 2-back:
+Agregar una captura de la tarea 2-back:
 
 ```markdown
 ![Tarea cognitiva 2-back](docs/images/nback_task_screenshot.png)
@@ -200,12 +191,11 @@ Esta etapa permitirá evaluar posteriormente si las métricas de HRV retornan ha
 
 ### Señal sugerida para agregar
 
-Agregar una imagen de ejemplo de la señal ECG durante recuperación:
+Agregar una imagen de la señal ECG durante recuperación de cada participante:
 
 ```markdown
 ![ECG durante recuperación](figures/ecg_recovery_example.png)
 ```
-
 ---
 
 ## Cuestionarios aplicados
@@ -216,15 +206,13 @@ Antes de iniciar la adquisición, cada participante completó la **Escala de Est
 
 Este cuestionario fue aplicado para obtener una medida subjetiva del estrés percibido durante el último mes. El puntaje total podrá ser utilizado posteriormente como variable complementaria en el análisis de la recuperación autonómica.
 
-### ¿Dónde colocar el formulario PSS-10?
-
-Se recomienda guardar el formulario en la carpeta:
+Enlace de las preguntas del Formulario:
 
 ```bash
 docs/forms/pss10_form.pdf
 ```
 
-También se puede agregar el enlace al formulario digital:
+Enlace del formulario digital:
 
 ```markdown
 [PSS-10 - Formulario aplicado](PEGAR_AQUI_LINK_DEL_GOOGLE_FORMS)
@@ -258,7 +246,9 @@ Para cada participante se registraron o se planea registrar las siguientes varia
 | Edad                          | Edad del participante                                       |
 | Sexo                          | Sexo reportado por el participante                          |
 | Puntaje PSS-10                | Estrés percibido antes de la adquisición                    |
-| Señal ECG cruda               | Señal registrada con BITalino/OpenSignals                   |
+| Señal ECG cruda basasl        | Señal registrada con BITalino/OpenSignals                   |
+| Señal ECG cruda Cognitiva     | Señal registrada con BITalino/OpenSignals                   |
+| Señal ECG cruda Recuperacion  | Señal registrada con BITalino/OpenSignals                   |
 | Intervalos R-R                | Intervalos entre picos R detectados                         |
 | RMSSD basal                   | Métrica HRV durante reposo basal                            |
 | RMSSD durante carga cognitiva | Métrica HRV durante tarea 2-back                            |
