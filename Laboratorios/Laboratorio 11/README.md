@@ -68,8 +68,8 @@ La adquisición piloto fue realizada en **3 estudiantes universitarios**.
 La adquisición de señales fisiológicas se realizó utilizando:
 
 * Sistema **BITalino**.
-* Sensor de **ECG de una derivación**.
-* Electrodos desechables **Ag/AgCl**.
+* Sensor de **ECG de una derivación** (2da Derivada).
+* Electrodos desechables.
 * Software **OpenSignals** para visualización y almacenamiento de datos.
 
 ---
@@ -84,25 +84,26 @@ Los electrodos fueron colocados siguiendo una configuración de tres derivacione
 | Negativo (-)     | Hombro derecho   |
 | Referencia / GND | Cresta ilíaca    |
 
-### Imagen sugerida
+### Imagen
 
 Agregar aquí una imagen o esquema de la colocación de electrodos:
 
 ```markdown
 ![Colocación de electrodos](docs/images/electrode_placement.png)
 ```
-
-Ruta sugerida del archivo:
-
-```bash
-docs/images/electrode_placement.png
-```
+<!-- Ruta sugerida del archivo: docs/images/electrode_placement.png -->
 
 ---
 
 ## Protocolo experimental
 
 El protocolo se desarrolló en una única sesión experimental con registro continuo de ECG durante tres fases consecutivas.
+
+Agregar aquí el protocolo:
+
+```markdown
+![Colocación del archivo del protocolo]
+```
 
 ### Resumen del protocolo
 
@@ -155,12 +156,6 @@ Agregar una imagen de ejemplo de la señal ECG basal:
 ![ECG basal](figures/ecg_basal_example.png)
 ```
 
-Ruta sugerida:
-
-```bash
-figures/ecg_basal_example.png
-```
-
 ---
 
 ## Fase 2: Tarea cognitiva 2-back
@@ -193,13 +188,6 @@ Agregar una captura o esquema de la tarea 2-back:
 ![Tarea cognitiva 2-back](docs/images/nback_task_screenshot.png)
 ```
 
-Rutas sugeridas:
-
-```bash
-figures/ecg_cognitive_task_example.png
-docs/images/nback_task_screenshot.png
-```
-
 ---
 
 ## Fase 3: Recuperación fisiológica
@@ -216,12 +204,6 @@ Agregar una imagen de ejemplo de la señal ECG durante recuperación:
 
 ```markdown
 ![ECG durante recuperación](figures/ecg_recovery_example.png)
-```
-
-Ruta sugerida:
-
-```bash
-figures/ecg_recovery_example.png
 ```
 
 ---
@@ -247,20 +229,6 @@ También se puede agregar el enlace al formulario digital:
 ```markdown
 [PSS-10 - Formulario aplicado](PEGAR_AQUI_LINK_DEL_GOOGLE_FORMS)
 ```
-
-### Recomendación para GitHub
-
-Para el README se recomienda colocar únicamente:
-
-* Nombre del instrumento.
-* Objetivo del instrumento.
-* Momento de aplicación.
-* Link al formulario.
-* Ruta al PDF del formulario.
-
-No se recomienda colocar todas las preguntas directamente en el README, ya que lo haría demasiado extenso. Es mejor subir el PDF en la carpeta `docs/forms/` o colocar el link del Google Forms.
-
-> **Importante:** Verificar que el formulario usado corresponda realmente a la versión PSS-10. Si se utiliza una escala de 14 ítems, se debe nombrar como PSS-14 y no como PSS-10.
 
 ### NASA-TLX
 
@@ -300,279 +268,8 @@ Para cada participante se registraron o se planea registrar las siguientes varia
 
 ---
 
-## Control de calidad de la señal
-
-Antes del inicio de cada sesión se verificó:
-
-* Correcta adhesión de los electrodos.
-* Presencia clara de complejos QRS.
-* Ausencia de ruido excesivo.
-* Ausencia de pérdida significativa de señal.
-* Continuidad del registro durante las tres fases.
-
-Los registros con artefactos excesivos o pérdida significativa de señal deberán ser descartados del análisis posterior.
-
-### Imagen sugerida para control de calidad
-
-Agregar una imagen donde se observe una señal ECG clara con complejos QRS identificables:
-
-```markdown
-![Control de calidad ECG](figures/ecg_quality_check.png)
-```
-
-Ruta sugerida:
-
-```bash
-figures/ecg_quality_check.png
-```
-
----
-
-## Organización del repositorio
-
-La estructura sugerida del repositorio es la siguiente:
-
-```bash
-project/
-│
-├── README.md
-│
-├── data/
-│   ├── raw/
-│   │   ├── P01/
-│   │   │   ├── basal/
-│   │   │   ├── cognitive_task/
-│   │   │   └── recovery/
-│   │   │
-│   │   ├── P02/
-│   │   │   ├── basal/
-│   │   │   ├── cognitive_task/
-│   │   │   └── recovery/
-│   │   │
-│   │   └── P03/
-│   │       ├── basal/
-│   │       ├── cognitive_task/
-│   │       └── recovery/
-│   │
-│   ├── processed/
-│   │   ├── rr_intervals/
-│   │   └── hrv_metrics/
-│   │
-│   └── metadata/
-│       └── participants_metadata.csv
-│
-├── docs/
-│   ├── protocol/
-│   │   └── acquisition_protocol.pdf
-│   │
-│   ├── forms/
-│   │   ├── pss10_form.pdf
-│   │   └── nasa_tlx_form.pdf
-│   │
-│   └── images/
-│       ├── electrode_placement.png
-│       ├── protocol_timeline.png
-│       └── nback_task_screenshot.png
-│
-├── figures/
-│   ├── ecg_basal_example.png
-│   ├── ecg_cognitive_task_example.png
-│   ├── ecg_recovery_example.png
-│   ├── ecg_quality_check.png
-│   └── hrv_rmssd_preview.png
-│
-├── notebooks/
-│   └── 01_signal_preview.ipynb
-│
-├── scripts/
-│   ├── preprocessing.py
-│   ├── r_peak_detection.py
-│   └── hrv_analysis.py
-│
-└── results/
-    ├── tables/
-    └── plots/
-```
-
----
-
-## Ubicación sugerida de archivos
-
-### Señales crudas
-
-Las señales crudas exportadas desde OpenSignals deben colocarse en:
-
-```bash
-data/raw/P01/basal/
-data/raw/P01/cognitive_task/
-data/raw/P01/recovery/
-```
-
-Ejemplo de nombres de archivo:
-
-```bash
-data/raw/P01/basal/P01_basal.txt
-data/raw/P01/cognitive_task/P01_2back.txt
-data/raw/P01/recovery/P01_recovery.txt
-```
-
-Repetir la misma estructura para P02 y P03.
-
----
-
-### Señales procesadas
-
-Los datos procesados, como intervalos R-R o métricas HRV, deben colocarse en:
-
-```bash
-data/processed/rr_intervals/
-data/processed/hrv_metrics/
-```
-
-Ejemplo:
-
-```bash
-data/processed/rr_intervals/P01_rr_intervals.csv
-data/processed/hrv_metrics/P01_hrv_metrics.csv
-```
-
----
-
-### Imágenes del protocolo
-
-Las imágenes relacionadas con el diseño experimental deben colocarse en:
-
-```bash
-docs/images/
-```
-
-Ejemplo:
-
-```bash
-docs/images/electrode_placement.png
-docs/images/protocol_timeline.png
-docs/images/nback_task_screenshot.png
-```
-
----
-
-### Figuras de señales
-
-Las figuras generadas a partir de las señales deben colocarse en:
-
-```bash
-figures/
-```
-
-Ejemplo:
-
-```bash
-figures/ecg_basal_example.png
-figures/ecg_cognitive_task_example.png
-figures/ecg_recovery_example.png
-figures/ecg_quality_check.png
-```
-
----
-
-### Formularios
-
-Los formularios aplicados deben colocarse en:
-
-```bash
-docs/forms/
-```
-
-Ejemplo:
-
-```bash
-docs/forms/pss10_form.pdf
-docs/forms/nasa_tlx_form.pdf
-```
-
-Si el formulario PSS-10 se aplicó mediante Google Forms, colocar también el link en esta sección:
-
-```markdown
-[PSS-10 - Google Forms](PEGAR_AQUI_LINK_DEL_GOOGLE_FORMS)
-```
-
----
-
-## Avance actual
-
-En este avance se completaron las siguientes actividades:
-
-* [x] Definición del protocolo experimental.
-* [x] Preparación del sistema de adquisición ECG.
-* [x] Colocación de electrodos según configuración definida.
-* [x] Adquisición piloto en 3 participantes.
-* [x] Registro ECG durante reposo basal.
-* [x] Registro ECG durante tarea cognitiva 2-back.
-* [x] Registro ECG durante recuperación fisiológica.
-* [x] Aplicación del PSS-10.
-* [x] Aplicación del NASA-TLX.
-* [x] Verificación inicial de calidad de señal.
-* [ ] Preprocesamiento de señales ECG.
-* [ ] Detección de picos R.
-* [ ] Cálculo de intervalos R-R.
-* [ ] Extracción de métricas HRV.
-* [ ] Análisis comparativo entre fases.
-
----
-
-## Próximos pasos
-
-Los próximos pasos del proyecto serán:
-
-1. Organizar los archivos crudos por participante y fase.
-2. Visualizar las señales ECG registradas.
-3. Realizar el preprocesamiento de la señal ECG.
-4. Detectar complejos QRS y picos R.
-5. Calcular intervalos R-R.
-6. Extraer métricas HRV, principalmente RMSSD.
-7. Comparar las métricas entre basal, tarea cognitiva y recuperación.
-8. Relacionar los resultados fisiológicos con el puntaje PSS-10.
-9. Relacionar los resultados fisiológicos con el puntaje NASA-TLX.
-10. Evaluar la recuperación autonómica posterior a la tarea cognitiva.
-
----
-
-## Consideraciones éticas y de privacidad
-
-Los datos deben ser almacenados de forma anonimizada. Cada participante será identificado mediante un código, por ejemplo P01, P02 o P03.
-
-No se deben subir a un repositorio público:
-
-* Nombres de participantes.
-* Correos electrónicos.
-* Respuestas individuales identificables.
-* Datos clínicos sensibles.
-* Formularios con información personal.
-* Archivos que permitan identificar directamente a un participante.
-
-Si el repositorio es público, se recomienda subir únicamente datos anonimizados o ejemplos representativos. Los datos completos deben mantenerse en almacenamiento privado.
-
----
-
-## Estado del proyecto
-
-```text
-[x] Protocolo experimental definido
-[x] Adquisición piloto realizada en 3 participantes
-[x] PSS-10 aplicado
-[x] NASA-TLX aplicado
-[x] Señales ECG adquiridas
-[ ] Preprocesamiento de señales
-[ ] Detección de picos R
-[ ] Extracción de intervalos R-R
-[ ] Cálculo de métricas HRV
-[ ] Análisis comparativo entre fases
-```
-
----
 
 ## Referencias
 
-* Cohen, S., Kamarck, T., & Mermelstein, R. (1983). A global measure of perceived stress. *Journal of Health and Social Behavior, 24*(4), 385–396.
-* Hart, S. G., & Staveland, L. E. (1988). Development of NASA-TLX: Results of empirical and theoretical research. *Advances in Psychology, 52*, 139–183.
-* Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate variability metrics and norms. *Frontiers in Public Health, 5*, 258.
+* Cohen
+* adasa
