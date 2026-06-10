@@ -108,7 +108,7 @@ Protocolo:
 
 ### Diagrama del protocolo
 
-![Línea de tiempo del protocolo](Archivos/timeline_protocolo.png)
+![Línea de tiempo del protocolo](Archivos/timeline_protocolo.svg)
 
 ---
 
