@@ -85,12 +85,7 @@ Los electrodos fueron colocados siguiendo una configuración de tres derivacione
 
 ### Imagen
 
-Agregar aquí una imagen o esquema de la colocación de electrodos:
-
-```markdown
-![Colocación de electrodos](docs/images/electrode_placement.png)
-```
-
+![Esquema de derivaciones ECG](Archivos/configuracion_electrodos.png)
 
 ---
 
@@ -100,9 +95,8 @@ El protocolo se desarrolló en una única sesión experimental con registro cont
 
 Protocolo:
 
-```markdown
-![Colocación del archivo del protocolo]
-```
+![Archivo del protocolo de adquisición](Archivos/Protocolo_Adquisicio.pdf)
+
 
 ### Resumen del protocolo
 
@@ -114,15 +108,7 @@ Protocolo:
 
 ### Diagrama del protocolo
 
-```markdown
-![Línea de tiempo del protocolo](docs/images/protocol_timeline.png)
-```
-
-Ejemplo de línea de tiempo:
-
-```text
-PSS-10 → ECG basal 5 min → ECG + tarea 2-back 5 min → NASA-TLX → ECG recuperación 5 min
-```
+![Línea de tiempo del protocolo](Archivos/timeline_protocolo.png)
 
 ---
 
