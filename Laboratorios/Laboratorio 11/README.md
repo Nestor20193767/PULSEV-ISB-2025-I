@@ -110,6 +110,8 @@ Protocolo:
 
 ![Línea de tiempo del protocolo](Archivos/timeline_protocolo.svg)
 
+<img width="1472" height="520" alt="image" src="https://github.com/user-attachments/assets/ec0d117c-bf62-47d9-a361-e44252db00df" />
+
 ---
 
 ## Fase 1: Reposo basal
