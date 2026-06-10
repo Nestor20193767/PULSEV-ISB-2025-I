@@ -107,7 +107,7 @@ Protocolo:
 | Fase 3 | Recuperación fisiológica |    5 min | El participante permanece sentado en reposo pasivo después de la tarea        |
 
 ### Diagrama del protocolo
-
+![Diagrama del protocolo](Archivos/protocolo_experimental_timeline.svg)
 <img width="1472" height="520" alt="image" src="https://github.com/user-attachments/assets/ec0d117c-bf62-47d9-a361-e44252db00df" />
 
 ---
