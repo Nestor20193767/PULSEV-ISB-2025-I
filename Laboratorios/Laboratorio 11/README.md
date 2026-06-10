@@ -95,7 +95,7 @@ El protocolo se desarrolló en una única sesión experimental con registro cont
 
 Protocolo:
 
-![Archivo del protocolo de adquisición](Archivos/Protocolo_Adquisicio.pdf)
+[Archivo del protocolo de adquisición](Archivos/Protocolo_Adquisicio.pdf)
 
 
 ### Resumen del protocolo
