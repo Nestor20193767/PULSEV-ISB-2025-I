@@ -108,7 +108,6 @@ Protocolo:
 
 ### Diagrama del protocolo
 ![Diagrama del protocolo](Archivos/protocolo_experimental_timeline.svg)
-<img width="1472" height="520" alt="image" src="https://github.com/user-attachments/assets/ec0d117c-bf62-47d9-a361-e44252db00df" />
 
 ---
 
@@ -125,9 +124,8 @@ Indicaciones dadas al participante:
 
 El objetivo de esta fase fue obtener una línea base fisiológica para comparar los cambios producidos durante la tarea cognitiva y durante la recuperación.
 
-### Señal sugerida para agregar
+### Señales adquiridas
 
-Agregar una imagen de la señal ECG basal de los 3 participantes:
 
 ```markdown
 ![ECG basal](figures/ecg_basal_example.png)
