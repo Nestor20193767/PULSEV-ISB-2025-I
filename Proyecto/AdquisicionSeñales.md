@@ -151,6 +151,8 @@ Durante esta fase se continuó registrando ECG con el objetivo de analizar la re
 
 Esta etapa permitirá evaluar posteriormente si las métricas de HRV retornan hacia valores cercanos al estado basal.
 
+---
+
 ## Señales Adquiridas
 
 Las señales de cada participante se presentan agrupadas por las tres fases del protocolo: basal, carga cognitiva y recuperación.
@@ -159,10 +161,14 @@ Las señales de cada participante se presentan agrupadas por las tres fases del 
 ![ECG Participante 1](Señales/P01_ECG_preview.png)
 
 ### Participante P02
-![ECG Participante 2](Señales/P01_ECG_preview.png)
+![ECG Participante 2](Señales/P02_ECG_preview.png)
 
 ### Participante P03
-![ECG Participante 3](Señales/P01_ECG_preview.png)
+![ECG Participante 3](Señales/P03_ECG_preview.png)
+
+### Participante P04
+![ECG Participante 3](Señales/P04_ECG_preview.png)
+
 
 ---
 
