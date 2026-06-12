@@ -67,7 +67,7 @@ Completar esta sección con los datos reales del laboratorio:
 >
 ### 📷 Foto de conexiones — BITalino y cables
 
-<img src="Archivos/materiales.jpeg" width="400"/>
+<img src="Archivos/materiales.jpeg" width="200"/>
 
 > *Descripción: Vista del sensor EEG ensamblado conectado al BITalino (r)evolution Core BT mediante el cable de referencia en el puerto analógico correspondiente.*
 
@@ -77,17 +77,16 @@ Completar esta sección con los datos reales del laboratorio:
 
 El protocolo consistió en seis etapas consecutivas de adquisición EEG. Primero se registró una condición basal, en la cual el participante permaneció aislado parcialmente de estímulos externos mediante cobertura de ojos y oídos. Luego se registró una condición de ojos abiertos, en la que el participante observó un punto fijo. Posteriormente, se adquirieron señales durante parpadeo voluntario y masticación para observar artefactos fisiológicos. Finalmente, se presentaron estímulos auditivos correspondientes a música relajante y música estresante.
 
-| Orden | Condición | Duración aproximada | Descripción |
-|---|---:|---:|---|
-| 1 | Basal | 2 min | Participante con ojos y oídos cubiertos para reducir estímulos externos. |
-| 2 | Ojos abiertos | 2 min | Participante mirando un punto fijo. |
-| 3 | Parpadeo | 1 min | Participante realiza parpadeos voluntarios. |
-| 4 | Masticación | 1 min | Participante mastica para inducir artefactos musculares. |
-| 5 | Música relajante | 2 min | Participante escucha música asociada a relajación. |
-| 6 | Música estresante | 2 min | Participante escucha música asociada a estrés o incomodidad. |
+| Orden | Condición | Duración aproximada | Descripción | Evidencia |
+|---|---:|---:|---|---|
+| 1 | Basal | 2 min | Participante con ojos y oídos cubiertos para reducir estímulos externos. | [▶ Ver video](link) |
+| 2 | Ojos abiertos | 2 min | Participante mirando un punto fijo. | [▶ Ver video](link) |
+| 3 | Parpadeo | 1 min | Participante realiza parpadeos voluntarios. | [▶ Ver video](link) |
+| 4 | Masticación | 1 min | Participante mastica para inducir artefactos musculares. | [▶ Ver video](link) |
+| 5 | Música relajante | 2 min | Participante escucha música asociada a relajación. | [▶ Ver video](link) |
+| 6 | Música estresante | 2 min | Participante escucha música asociada a estrés o incomodidad. | [▶ Ver video](link) |
 
 **Diagrama del protocolo**  
-
 ![Protocolo experimental](Archivos/protocolo_eeg_.svg)
 
 ---
