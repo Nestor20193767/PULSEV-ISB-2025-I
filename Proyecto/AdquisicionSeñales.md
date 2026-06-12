@@ -214,8 +214,3 @@ Para cada participante se registraron o se planea registrar las siguientes varia
 
 ---
 
-
-## Referencias
-
-* Cohen
-* adasa
