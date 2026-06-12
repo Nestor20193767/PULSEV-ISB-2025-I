@@ -85,11 +85,9 @@ El protocolo consistió en seis etapas consecutivas de adquisición EEG. Primero
 | 5 | Música relajante | 2 min | Participante escucha música asociada a relajación. |
 | 6 | Música estresante | 2 min | Participante escucha música asociada a estrés o incomodidad. |
 
-> **Dónde colocar diagrama del protocolo:**  
->
-> ```markdown
-> ![Protocolo experimental](figures/protocolo/protocolo_eeg.png)
-> ```
+**Diagrama del protocolo**  
+
+[Protocolo experimental](Archivos/protocolo_eeg_.svg)
 
 ---
 
