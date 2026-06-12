@@ -239,7 +239,7 @@ El algoritmo busca picos en la señal centrada respecto a su mediana. Se contabi
 
 ---
 
-### 3.6 Comparación Fp1 vs Fp2
+### 3.7 Comparación Fp1 vs Fp2
 La comparación se hace por potencia relativa de bandas.
 
 [comparacion Fp1 vs Fp2](Archivos/comparacion_Fp1_Fp2.csv)
@@ -259,18 +259,45 @@ La comparación se hace por potencia relativa de bandas.
 
 ## 4. Discusión
 
-### ¿Qué banda de frecuencia predomina al cerrar los ojos?
-En la condición basal con ojos cubiertos o cerrados se evaluó la potencia relativa de las bandas EEG. Según los resultados obtenidos, la banda predominante fue [completar: alfa/theta/beta/etc.]. En EEG, la banda alfa suele aumentar durante reposo con ojos cerrados, aunque este efecto puede observarse mejor en regiones posteriores que en derivaciones frontales.
+### 4.1 ¿Qué banda de frecuencia predomina al cerrar los ojos?
 
-### ¿Qué filtro es imprescindible para EEG y por qué?
-Para EEG es imprescindible controlar el contenido de frecuencia mediante un filtro pasa banda, porque la señal EEG es de baja amplitud y puede contaminarse por deriva DC, movimiento y ruido de alta frecuencia. En este laboratorio, el canal EEG de BITalino ya incluye un filtro hardware de aproximadamente 0.8-48 Hz, por lo que se atenúan componentes lentas y frecuencias por encima del rango EEG principal. Además, si aparece contaminación de red eléctrica, se puede usar un filtro notch de 50/60 Hz; sin embargo, en este caso puede no ser necesario porque el hardware ya limita la banda hasta aproximadamente 48 Hz.
+En la condición basal con ojos cerrados se observó que la banda con mayor potencia relativa fue **delta** en ambos canales: 0.395 en Fp1 y 0.455 en Fp2. Sin embargo, este resultado debe interpretarse con cautela. En registros EEG frontales, una alta potencia en bajas frecuencias puede estar influenciada por artefactos lentos, movimiento, deriva de línea base, cambios de impedancia o actividad ocular residual [6], [7].
 
-### ¿Puedes modular conscientemente tu señal EEG? Da un ejemplo.
-Sí, algunos patrones EEG pueden modificarse de manera consciente o voluntaria. Un ejemplo simple es abrir y cerrar los ojos: al cerrar los ojos, puede aumentar la actividad alfa en reposo. Otro ejemplo es el parpadeo, aunque este no representa modulación cerebral pura, sino un artefacto ocular claramente visible en la señal.
+A pesar de que delta fue la banda predominante en términos relativos, también se observó un comportamiento compatible con lo esperado para la banda alfa. En Fp1, la potencia alfa relativa fue mayor durante ojos cerrados que durante ojos abiertos, con una diferencia estadísticamente significativa. Esto coincide con la literatura, donde se describe que el cierre de ojos suele incrementar la actividad alfa, especialmente en regiones posteriores, aunque también puede producir cambios distribuidos en otras bandas de frecuencia [1], [2], [3]. En Fp2, la diferencia de alfa relativa entre ojos cerrados y ojos abiertos no fue significativa, lo cual puede deberse a diferencias de contacto, ruido, asimetría entre canales o sensibilidad de la región frontal a artefactos oculares [6], [7].
 
-### ¿Se observan diferencias entre Fp1 y Fp2? ¿Por qué podrían ocurrir?
-Si se adquirieron Fp1 y Fp2, las diferencias pueden deberse a varios factores: diferencias de impedancia entre electrodos, contacto desigual con la piel, asimetría en la colocación, actividad ocular lateralizada, actividad muscular facial o diferencias reales en la actividad registrada por cada derivación. Por ello, antes de interpretar diferencias fisiológicas, se debe verificar la calidad de la señal y la presencia de artefactos.
+Por lo tanto, para este registro se puede afirmar que la banda predominante fue delta, pero el hallazgo fisiológicamente más relevante fue el aumento significativo de alfa relativa en Fp1 durante la condición de ojos cerrados.
 
+---
+
+### 4.2 ¿Qué filtro es imprescindible para EEG y por qué?
+
+El filtro más importante en EEG es el **filtro pasa banda**, porque permite conservar el rango de frecuencias de interés y reducir componentes no deseadas, como deriva de línea base, componentes de muy baja frecuencia, ruido de alta frecuencia y parte de la actividad no cerebral. En este laboratorio, el módulo EEG de BITalino ya incorpora un filtro hardware pasabanda de aproximadamente 0.8-48 Hz, lo cual es adecuado para estudiar bandas EEG como theta, alfa y beta [10], [11].
+
+Además, en EEG suele considerarse el uso de un **filtro notch** para eliminar interferencia de red eléctrica de 50 o 60 Hz. Sin embargo, en este caso no fue imprescindible aplicar un notch de 60 Hz, porque el propio ancho de banda del sensor llega aproximadamente hasta 48 Hz. Aun así, es importante mencionar que el uso de filtros debe realizarse cuidadosamente, ya que un filtrado agresivo puede distorsionar la señal o afectar la interpretación temporal y espectral [4], [5].
+
+En este análisis se aplicó un filtro pasa banda digital complementario para estandarizar el procesamiento de las señales antes del cálculo de PSD y potencia por bandas.
+
+---
+
+### 4.3 ¿Puedes modular conscientemente tu señal EEG? Da un ejemplo.
+
+Sí, algunas características de la señal EEG pueden modificarse de manera consciente o voluntaria, aunque no siempre de forma precisa ni inmediata. Un ejemplo simple es el cambio entre ojos cerrados y ojos abiertos. Al cerrar los ojos, suele aumentar la actividad alfa, mientras que al abrirlos puede disminuir debido al procesamiento visual y al aumento de atención hacia el entorno [1], [2].
+
+Otro ejemplo más avanzado es el **neurofeedback EEG**, donde una persona recibe retroalimentación en tiempo real sobre alguna característica de su señal cerebral, como la potencia alfa, beta o el ritmo sensorimotor. Con entrenamiento, algunas personas pueden aprender a modificar ciertos patrones de actividad EEG [8], [9]. Sin embargo, esta modulación depende del protocolo, del participante y de la calidad de la señal registrada.
+
+En el presente laboratorio, el ejemplo más claro de modulación voluntaria fue el parpadeo, pero este debe considerarse un artefacto ocular y no una modulación cerebral pura. En cambio, el cambio entre ojos cerrados y ojos abiertos representa un mejor ejemplo de modulación fisiológica observable en EEG [1], [6].
+
+---
+
+### 4.4 ¿Se observan diferencias entre Fp1 y Fp2? ¿Por qué podrían ocurrir?
+
+Sí, se observaron diferencias entre Fp1 y Fp2 en algunas condiciones. Por ejemplo, durante ojos abiertos, Fp2 presentó una potencia beta relativa mayor que Fp1. También se observaron diferencias en la potencia alfa relativa durante la condición basal, donde Fp1 presentó mayor alfa relativa que Fp2.
+
+Estas diferencias pueden deberse a factores fisiológicos y técnicos. Desde el punto de vista fisiológico, Fp1 y Fp2 corresponden a regiones frontopolares izquierda y derecha dentro del sistema internacional 10-20, por lo que podrían registrar actividad ligeramente distinta [12]. Sin embargo, en este laboratorio la interpretación debe ser cautelosa, porque los electrodos frontales son muy sensibles a parpadeos, movimientos oculares y actividad muscular facial [6], [7], [11].
+
+Desde el punto de vista técnico, las diferencias pueden explicarse por contacto desigual de los electrodos, diferencias de impedancia, colocación no exactamente simétrica, referencia, cables o ruido local. La literatura sobre artefactos EEG señala que la mala impedancia electrodo-piel, el mal contacto, los parpadeos, los movimientos oculares y la actividad muscular pueden contaminar la señal y producir diferencias aparentes entre canales [6], [7].
+
+Por ello, aunque sí se observan diferencias entre Fp1 y Fp2, no deben interpretarse directamente como diferencias cerebrales hemisféricas sin antes verificar impedancia, calidad de contacto y presencia de artefactos.
 ---
 
 ## 5. Conclusiones
@@ -297,10 +324,32 @@ Los pasos aplicados fueron:
 8. Comparación estadística mediante t-test pareado.
 9. Detección de parpadeos mediante umbral de 80 µV.
 
-
-
 ---
 
 ## 7. Referencias
+
+[1] Barry, R. J., Clarke, A. R., Johnstone, S. J., Magee, C. A., & Rushby, J. A. (2007). EEG differences between eyes-closed and eyes-open resting conditions. *Clinical Neurophysiology, 118*(12), 2765–2773. https://doi.org/10.1016/j.clinph.2007.07.028
+
+[2] Hohaia, W., Saurels, B. W., Johnston, A., Yarrow, K., & Arnold, D. H. (2022). Occipital alpha-band brain waves when the eyes are closed are shaped by ongoing visual processes. *Scientific Reports, 12*, Article 1194. https://doi.org/10.1038/s41598-022-05289-6
+
+[3] Geller, A. S., Burke, J. F., Sperling, M. R., Sharan, A. D., Litt, B., Baltuch, G. H., Lucas, T. H., & Kahana, M. J. (2014). Eye closure causes widespread low-frequency power increase and focal gamma attenuation in the human electrocorticogram. *Clinical Neurophysiology, 125*(9), 1764–1773. https://doi.org/10.1016/j.clinph.2014.01.021
+
+[4] Bigdely-Shamlo, N., Mullen, T., Kothe, C., Su, K. M., & Robbins, K. A. (2015). The PREP pipeline: Standardized preprocessing for large-scale EEG analysis. *Frontiers in Neuroinformatics, 9*, Article 16. https://doi.org/10.3389/fninf.2015.00016
+
+[5] Leske, S., & Dalal, S. S. (2019). Reducing power line noise in EEG and MEG data via spectrum interpolation. *NeuroImage, 189*, 763–776. https://doi.org/10.1016/j.neuroimage.2019.01.026
+
+[6] Jiang, X., Bian, G.-B., & Tian, Z. (2019). Removal of artifacts from EEG signals: A review. *Sensors, 19*(5), Article 987. https://doi.org/10.3390/s19050987
+
+[7] Pion-Tonachini, L., Kreutz-Delgado, K., & Makeig, S. (2019). ICLabel: An automated electroencephalographic independent component classifier, dataset, and website. *NeuroImage, 198*, 181–197. https://doi.org/10.1016/j.neuroimage.2019.05.026
+
+[8] Enriquez-Geppert, S., Huster, R. J., & Herrmann, C. S. (2017). EEG-neurofeedback as a tool to modulate cognition and behavior: A review tutorial. *Frontiers in Human Neuroscience, 11*, Article 51. https://doi.org/10.3389/fnhum.2017.00051
+
+[9] Omejc, N., Rojc, B., Battaglini, P. P., & Marusic, U. (2019). Review of the therapeutic neurofeedback method using electroencephalography: EEG neurofeedback. *Bosnian Journal of Basic Medical Sciences, 19*(3), 213–220. https://doi.org/10.17305/bjbms.2018.3785
+
+[10] PLUX Biosignals. (2024). *BITalino electroencephalography (EEG) sensor data sheet*. PLUX Wireless Biosignals.
+
+[11] PLUX Biosignals. (2024). *BITalino assembled electroencephalography (EEG) sensor data sheet*. PLUX Wireless Biosignals.
+
+[12] Acharya, J. N., Hani, A. J., Cheek, J., Thirumala, P., & Tsuchida, T. N. (2016). American Clinical Neurophysiology Society guideline 2: Guidelines for standard electrode position nomenclature. *The Neurodiagnostic Journal, 56*(4), 245–252. https://doi.org/10.1080/21646821.2016.1245558
 
 
