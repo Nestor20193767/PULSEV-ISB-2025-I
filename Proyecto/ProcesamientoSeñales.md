@@ -1,18 +1,6 @@
 # Adquisición y análisis exploratorio de ECG para recuperación autonómica post carga cognitiva
 
-## Descripción del proyecto
-
-Este repositorio contiene el avance del proyecto orientado al análisis de la recuperación autonómica posterior a una tarea de carga cognitiva en estudiantes universitarios, utilizando señales de electrocardiografía (ECG) y métricas de variabilidad de la frecuencia cardíaca (HRV).
-
-El proyecto busca evaluar cambios fisiológicos asociados a una tarea cognitiva tipo **2-back**, comparando tres fases experimentales:
-
-1. Reposo basal
-2. Tarea cognitiva
-3. Recuperación fisiológica
-
-En este avance se realizó una adquisición piloto con **4 participantes** y se desarrolló un **análisis exploratorio de datos (EDA)** para verificar la calidad de las señales, la detección de picos R, los intervalos RR y métricas HRV preliminares.
-
-> Este avance corresponde a una etapa exploratoria. Los resultados son descriptivos y no constituyen todavía una validación estadística del algoritmo de recuperación autonómica.
+Este avance corresponde a una etapa exploratoria. Los resultados son descriptivos y no constituyen todavía una validación estadística del algoritmo de recuperación autonómica.
 
 ---
 
@@ -30,8 +18,6 @@ Realizar un análisis exploratorio inicial de las señales ECG adquiridas durant
 * Identificar intervalos RR anómalos o ectópicos.
 * Calcular métricas HRV globales por condición.
 * Analizar la evolución temporal de RMSSD mediante ventanas deslizantes.
-* Estimar un porcentaje exploratorio de recuperación autonómica basado en RMSSD.
-* Documentar limitaciones y registros que requieren revisión.
 
 ---
 
@@ -57,16 +43,8 @@ El protocolo consistió en una sesión de adquisición continua de ECG dividida 
 | Fase   | Condición                | Duración esperada | Descripción                                                      |
 | ------ | ------------------------ | ----------------: | ---------------------------------------------------------------- |
 | Fase 1 | Reposo basal             |             5 min | Participante sentado, en reposo y sin movimientos innecesarios   |
-| Fase 2 | Tarea cognitiva 2-back   |             5 min | Participante realiza una tarea de memoria de trabajo tipo 2-back |
+| Fase 2 | Tarea cognitiva 2-back   |             5 min aprox.| Participante realiza una tarea de memoria de trabajo tipo 2-back |
 | Fase 3 | Recuperación fisiológica |             5 min | Participante permanece sentado en reposo posterior a la tarea    |
-
-### Diagrama del protocolo
-
-```markdown
-![Diagrama del protocolo](docs/images/protocolo_experimental_timeline.svg)
-```
-
----
 
 ## Equipamiento utilizado
 
@@ -77,53 +55,6 @@ La adquisición de señales ECG se realizó utilizando:
 * Electrodos desechables.
 * Software OpenSignals para visualización y almacenamiento.
 * Frecuencia de muestreo: **1000 Hz**.
-
----
-
-## Organización del repositorio
-
-```text
-Proyecto_ECG_HRV/
-│
-├── README.md
-├── requirements.txt
-├── .gitignore
-│
-├── docs/
-│   ├── protocolo_adquisicion.pdf
-│   ├── pss10_form.pdf
-│   └── nasa_tlx_form.pdf
-│
-├── data/
-│   ├── raw/
-│   │   ├── P01_basal_ECG.txt
-│   │   ├── P01_cognitiva_ECG.txt
-│   │   ├── P01_recuperacion_ECG.txt
-│   │   └── ...
-│   │
-│   └── processed/
-│       ├── tabla_completitud.csv
-│       ├── tabla_HRV_global.csv
-│       ├── tabla_recuperacion_RMSSD.csv
-│       ├── tabla_RMSSD_ventanas.csv
-│       ├── tabla_cuestionarios.csv
-│       └── resumen_EDA_HRV_completo.csv
-│
-├── notebooks/
-│   └── ECG_HRV_EDA.ipynb
-│
-├── scripts/
-│   └── ECG_HRV_EDA_Completo_Corregido.py
-│
-└── results/
-    └── figures/
-        ├── P01_ECG_preview_picosR.png
-        ├── P01_histograma_RR.png
-        ├── P01_RMSSD_deslizante.png
-        ├── Comparacion_HRV_global.png
-        ├── Perfiles_individuales_HRV.png
-        └── Porcentaje_recuperacion_RMSSD.png
-```
 
 ---
 
@@ -360,48 +291,43 @@ En este avance, el caso más interpretable fue P04, con una recuperación parcia
 
 ### ECG con picos R detectados
 
-```markdown
 ![ECG P01](results/figures/P01_ECG_preview_picosR.png)
 ![ECG P02](results/figures/P02_ECG_preview_picosR.png)
 ![ECG P03](results/figures/P03_ECG_preview_picosR.png)
 ![ECG P04](results/figures/P04_ECG_preview_picosR.png)
-```
+
 
 ### Distribución de intervalos RR
 
-```markdown
 ![Histograma RR P01](results/figures/P01_histograma_RR.png)
 ![Histograma RR P02](results/figures/P02_histograma_RR.png)
 ![Histograma RR P03](results/figures/P03_histograma_RR.png)
 ![Histograma RR P04](results/figures/P04_histograma_RR.png)
-```
+
 
 ### RMSSD deslizante
 
-```markdown
+
 ![RMSSD P01](results/figures/P01_RMSSD_deslizante.png)
 ![RMSSD P02](results/figures/P02_RMSSD_deslizante.png)
 ![RMSSD P03](results/figures/P03_RMSSD_deslizante.png)
 ![RMSSD P04](results/figures/P04_RMSSD_deslizante.png)
-```
+
 
 ### Comparación global
 
-```markdown
 ![Comparación HRV global](results/figures/Comparacion_HRV_global.png)
-```
+
 
 ### Perfiles individuales
 
-```markdown
 ![Perfiles individuales HRV](results/figures/Perfiles_individuales_HRV.png)
-```
+
 
 ### Porcentaje de recuperación
 
-```markdown
 ![Porcentaje de recuperación RMSSD](results/figures/Porcentaje_recuperacion_RMSSD.png)
-```
+
 
 ---
 
@@ -419,44 +345,6 @@ En este avance, el caso más interpretable fue P04, con una recuperación parcia
 | `resumen_EDA_HRV_completo.csv` | Resumen completo de calidad, señal y HRV              |
 
 ### Código
-
-| Archivo                             | Descripción                                                 |
-| ----------------------------------- | ----------------------------------------------------------- |
-| `ECG_HRV_EDA.ipynb`                 | Notebook del análisis exploratorio                          |
-| `ECG_HRV_EDA_Completo_Corregido.py` | Script completo de procesamiento y generación de resultados |
-
----
-
-## Cómo ejecutar el análisis
-
-### 1. Instalar dependencias
-
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Dependencias principales
-
-```txt
-numpy
-pandas
-matplotlib
-scipy
-neurokit2
-```
-
-### 3. Ejecutar el script
-
-```bash
-python scripts/ECG_HRV_EDA_Completo_Corregido.py
-```
-
-Si se ejecuta en Google Colab, se debe montar Google Drive y ajustar las rutas:
-
-```python
-DATA_DIR = "/content/drive/MyDrive/Proyecto_ECG"
-OUTPUT_DIR = "/content/drive/MyDrive/Proyecto_ECG/Graficas_EDA"
-```
 
 ---
 
@@ -484,19 +372,3 @@ Este avance sirve como base para mejorar el protocolo, estandarizar el procesami
 
 ---
 
-## Próximos pasos
-
-1. Revisar manualmente los registros marcados como problemáticos.
-2. Validar visualmente la detección de picos R en todos los participantes.
-3. Estandarizar la duración analizada por condición.
-4. Integrar puntajes PSS-10, NASA-TLX y accuracy de la tarea 2-back.
-5. Ampliar el número de participantes.
-6. Definir criterios robustos para clasificar recuperación autonómica.
-7. Evaluar métricas adicionales de HRV en el dominio temporal y, posteriormente, en el dominio frecuencial.
-8. Comparar resultados con literatura sobre HRV, carga cognitiva y recuperación autonómica.
-
----
-
-## Consideraciones éticas y de privacidad
-
-Los participantes fueron codificados como P01, P02, P03 y P04 para evitar identificación directa. Si el repositorio se mantiene público, se recomienda no incluir información personal ni datos crudos que permitan identificar a los participantes. Los datos deben compartirse únicamente de forma anonimizada y con autorización correspondiente.
