@@ -66,9 +66,9 @@ Completar esta sección con los datos reales del laboratorio:
 
 > **Dónde colocar imagen del equipo:**  
 >
-> ```markdown
-> ![Equipo EEG utilizado](Archivos/materiales.jpeg)
-> ```
+![Equipo EEG utilizado](Archivos/materiales.jpeg)
+
+> *Descripción: Vista del sensor EEG ensamblado conectado al BITalino (r)evolution Core BT mediante el cable de referencia en el puerto analógico correspondiente.*
 
 ---
 
