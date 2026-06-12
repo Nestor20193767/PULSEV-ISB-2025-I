@@ -337,12 +337,12 @@ En este avance, el caso más interpretable fue P04, con una recuperación parcia
 
 | Archivo                        | Descripción                                           |
 | ------------------------------ | ----------------------------------------------------- |
-| [`tabla_completitud.csv`](Señales/Procesamiento/Porcentaje_recuperacion_RMSSD.png)| Verificación de archivos, duración, picos R y calidad |
-| `tabla_HRV_global.csv`         | Métricas HRV globales por participante y condición    |
-| `tabla_recuperacion_RMSSD.csv` | Cálculo del porcentaje exploratorio de recuperación   |
-| `tabla_RMSSD_ventanas.csv`     | RMSSD calculado por ventanas deslizantes              |
-| `tabla_cuestionarios.csv`      | Registro de PSS-10, NASA-TLX y accuracy 2-back        |
-| `resumen_EDA_HRV_completo.csv` | Resumen completo de calidad, señal y HRV              |
+| [`tabla_completitud.csv`](Señales/Procesamiento/tabla_completitud.csv) | Verificación de archivos, duración, picos R y calidad |
+| [`tabla_HRV_global.csv`](Señales/Procesamiento/tabla_HRV_global.csv) | Métricas HRV globales por participante y condición    |
+| [`tabla_recuperacion_RMSSD.csv`](Señales/Procesamiento/tabla_recuperacion_RMSSD.csv) | Cálculo del porcentaje exploratorio de recuperación   |
+| [`tabla_RMSSD_ventanas.csv`](Señales/Procesamiento/tabla_RMSSD_ventanas.csv) | RMSSD calculado por ventanas deslizantes              |
+| [`tabla_cuestionarios.csv`](Señales/Procesamiento/tabla_cuestionarios.csv) | Registro de PSS-10, NASA-TLX y accuracy 2-back        |
+| [`resumen_EDA_HRV_completo.csv`](Señales/Procesamiento/resumen_EDA_HRV_completo.csv) | Resumen completo de calidad, señal y HRV              |
 
 ### Código
 
