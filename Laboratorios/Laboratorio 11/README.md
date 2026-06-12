@@ -79,9 +79,9 @@ Los electrodos fueron colocados siguiendo una configuración de tres derivacione
 
 | Electrodo        | Ubicación        |
 | ---------------- | ---------------- |
-| Positivo (+)     | Hombro izquierdo |
+| Positivo (+)     | Cresta ilíaca    |
 | Negativo (-)     | Hombro derecho   |
-| Referencia / GND | Cresta ilíaca    |
+| Referencia / GND | Hombro izquierdo |
 
 ### Imagen
 
