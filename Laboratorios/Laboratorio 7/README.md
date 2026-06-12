@@ -91,45 +91,7 @@ El protocolo consistió en seis etapas consecutivas de adquisición EEG. Primero
 
 ---
 
-### 2.4 Organización de los datos
-
-Los archivos crudos deben colocarse en la carpeta:
-
-```text
-data/raw/
-```
-
-Ejemplo de nombres recomendados:
-
-```text
-basal.csv
-ojos_abiertos.csv
-parpadeo.csv
-masticacion.csv
-musica_relajante.csv
-musica_estresante.csv
-```
-
-Los archivos procesados o filtrados deben colocarse en:
-
-```text
-data/processed/
-```
-
-Ejemplo:
-
-```text
-basal_filtrada.csv
-ojos_abiertos_filtrada.csv
-parpadeo_filtrada.csv
-masticacion_filtrada.csv
-musica_relajante_filtrada.csv
-musica_estresante_filtrada.csv
-```
-
----
-
-### 2.5 Preprocesamiento de la señal
+### 2.4 Preprocesamiento de la señal
 
 El preprocesamiento debe describir claramente qué se hizo antes de analizar los resultados. Se recomienda reportar:
 
@@ -141,62 +103,41 @@ El preprocesamiento debe describir claramente qué se hizo antes de analizar los
 6. Segmentación por condición experimental.
 7. Cálculo de métricas temporales y espectrales.
 
-Ejemplo de comando para ejecutar el preprocesamiento:
 
-```bash
-python scripts/02_preprocesamiento.py
-```
-
-Ejemplo de bloque de código que puede incluirse en el notebook:
+Instalación de librerias:
 
 ```python
+from pathlib import Path
+import warnings
+
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.signal import butter, filtfilt, welch
 
-# Cargar señal EEG
-senal = pd.read_csv("data/raw/basal.csv")
+from scipy.signal import welch, butter, filtfilt, iirnotch, find_peaks
+from scipy.stats import ttest_rel
 
-# Ejemplo: graficar señal cruda
-plt.figure(figsize=(12, 4))
-plt.plot(senal["tiempo"], senal["eeg"])
-plt.xlabel("Tiempo (s)")
-plt.ylabel("Amplitud EEG")
-plt.title("Señal EEG basal cruda")
-plt.grid(True)
-plt.show()
+plt.rcParams["figure.figsize"] = (12, 4)
+plt.rcParams["axes.grid"] = True
 ```
-
-> **Dónde colocar capturas del código:**  
-> Si el informe final requiere mostrar partes del código, colocar capturas o fragmentos relevantes en la sección de Métodos, especialmente en el apartado de preprocesamiento.
->
-> Carpeta sugerida:
->
-> ```text
-> figures/protocolo/
-> ```
-
 ---
 
-### 2.6 Análisis de la señal
+### 2.5 Procesamiento realizado
+El procesamiento fue realizado en Python usando Google Colab. El archivo principal de análisis fue:
 
-Para el análisis se recomienda incluir:
+[Codigo de Colab del laboratorio 7](Archivos/EEG_BITalino_Analisis.ipynb)
 
-- Gráficas de señal EEG en el dominio temporal.
-- Comparación entre señal cruda y filtrada.
-- Análisis espectral mediante densidad espectral de potencia.
-- Comparación de bandas EEG: delta, theta, alfa, beta y gamma, si la frecuencia de muestreo lo permite.
-- Identificación visual de artefactos por parpadeo y masticación.
 
-Bandas EEG de referencia:
-
-| Banda | Rango aproximado |
-|---|---:|
-| Delta | 0.5-4 Hz |
-| Theta | 4-8 Hz |
-| Alfa | 8-13 Hz |
-| Beta | 13-30 Hz |
-| Gamma | 30-45 Hz |
+Los pasos aplicados fueron:
+1. Carga de los archivos .txt.
+2. Selección de los canales Fp1 y Fp2.
+3. Conversión de la señal a microvoltios.
+4. Aplicación de filtro pasa banda digital complementario.
+5. Segmentación de la señal en ventanas de 2 segundos.
+6. Cálculo de la densidad espectral de potencia mediante Welch.
+7. Cálculo de potencia relativa por bandas EEG.
+8. Comparación estadística mediante t-test pareado.
+9. Detección de parpadeos mediante umbral de 80 µV.
 
 ---
 
