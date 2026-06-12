@@ -120,24 +120,6 @@ from scipy.stats import ttest_rel
 plt.rcParams["figure.figsize"] = (12, 4)
 plt.rcParams["axes.grid"] = True
 ```
----
-
-### 2.5 Procesamiento realizado
-El procesamiento fue realizado en Python usando Google Colab. El archivo principal de análisis fue:
-
-[Codigo de Colab del laboratorio 7](Archivos/EEG_BITalino_Analisis.ipynb)
-
-
-Los pasos aplicados fueron:
-1. Carga de los archivos .txt.
-2. Selección de los canales Fp1 y Fp2.
-3. Conversión de la señal a microvoltios.
-4. Aplicación de filtro pasa banda digital complementario.
-5. Segmentación de la señal en ventanas de 2 segundos.
-6. Cálculo de la densidad espectral de potencia mediante Welch.
-7. Cálculo de potencia relativa por bandas EEG.
-8. Comparación estadística mediante t-test pareado.
-9. Detección de parpadeos mediante umbral de 80 µV.
 
 ---
 
@@ -300,50 +282,25 @@ El análisis resalta la importancia de controlar el protocolo de adquisición, d
 ---
 
 ## 6. Código utilizado
+El procesamiento fue realizado en Python usando Google Colab. El archivo principal de análisis debe ubicarse en:
 
-Los scripts principales deben ubicarse en la carpeta:
+[Codigo de Colab del laboratorio 7](Archivos/EEG_BITalino_Analisis.ipynb)
 
-```text
-scripts/
-```
+Los pasos aplicados fueron:
+1. Carga de los archivos .txt.
+2. Selección de los canales Fp1 y Fp2.
+3. Conversión de la señal a microvoltios.
+4. Aplicación de filtro pasa banda digital complementario.
+5. Segmentación de la señal en ventanas de 2 segundos.
+6. Cálculo de la densidad espectral de potencia mediante Welch.
+7. Cálculo de potencia relativa por bandas EEG.
+8. Comparación estadística mediante t-test pareado.
+9. Detección de parpadeos mediante umbral de 80 µV.
 
-Descripción recomendada:
 
-| Script | Función |
-|---|---|
-| `01_cargar_senal.py` | Carga los archivos EEG desde `data/raw/`. |
-| `02_preprocesamiento.py` | Aplica filtros y guarda archivos procesados. |
-| `03_graficas_temporales.py` | Genera gráficas en el dominio temporal. |
-| `04_analisis_frecuencia.py` | Calcula PSD y potencia por bandas. |
-| `05_comparacion_condiciones.py` | Compara las condiciones experimentales. |
-
-El notebook principal debe ubicarse en:
-
-```text
-notebooks/EEG_Analisis.ipynb
-```
-
-En el notebook se recomienda incluir:
-
-1. Carga de datos.
-2. Visualización de señales crudas.
-3. Preprocesamiento.
-4. Visualización de señales filtradas.
-5. Análisis espectral.
-6. Comparación entre condiciones.
-7. Conclusiones parciales.
 
 ---
 
 ## 7. Referencias
 
-Benbadis, S. R. (2024). *EEG Artifacts*. Medscape.
-
-Goldman, R. I., Stern, J. M., Engel, J., & Cohen, M. S. (2002). Simultaneous EEG and fMRI of the alpha rhythm. *NeuroReport, 13*(18), 2487-2492.
-
-Luck, S. J. (2014). *An Introduction to the Event-Related Potential Technique*. MIT Press.
-
-Ronca, V., Capotorto, R., Di Flumeri, G., Giorgi, A., Vozzi, A., Germano, D., Di Virgilio, V., Borghini, G., Cartocci, G., & Aricò, P. (2024). Optimizing EEG Signal Integrity: A Comprehensive Guide to Ocular Artifact Correction. *Bioengineering, 11*(10), 1018.
-
-Teplan, M. (2002). Fundamentals of EEG measurement. *Measurement Science Review, 2*(2), 1-11.
 
