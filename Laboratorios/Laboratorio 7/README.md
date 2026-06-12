@@ -299,9 +299,17 @@ Por ello, aunque sí se observan diferencias entre Fp1 y Fp2, no deben interpret
 
 ## 5. Conclusiones
 
-En este laboratorio se adquirieron señales EEG bajo seis condiciones experimentales. La condición basal permitió obtener una señal de referencia, mientras que las condiciones de parpadeo y masticación facilitaron la identificación de artefactos fisiológicos. Las condiciones de música relajante y música estresante permitieron explorar posibles cambios en la señal ante estímulos auditivos, aunque los resultados deben interpretarse de manera descriptiva si el tamaño de muestra es reducido.
+En este laboratorio se adquirieron y analizaron señales EEG en los canales frontales Fp1 y Fp2 usando el módulo EEG de BITalino. Las señales fueron registradas en seis condiciones: basal con ojos cerrados, ojos abiertos, parpadeo, masticación, música relajante y música estresante.
 
-El análisis resalta la importancia de controlar el protocolo de adquisición, documentar adecuadamente las condiciones experimentales y diferenciar entre actividad cerebral y artefactos antes de realizar interpretaciones fisiológicas.
+Durante la condición basal con ojos cerrados predominó la banda delta en ambos canales. Sin embargo, este resultado debe interpretarse con cautela, ya que los registros frontales pueden estar influenciados por artefactos lentos, movimiento, actividad ocular o cambios de contacto electrodo-piel [6], [7].
+
+La comparación entre ojos cerrados y ojos abiertos mostró que la potencia alfa relativa fue significativamente mayor en Fp1 durante ojos cerrados, lo cual coincide con el comportamiento esperado del EEG en reposo [1], [2]. En Fp2, esta diferencia no fue significativa, posiblemente por variabilidad entre canales o presencia de artefactos.
+
+Respecto a la potencia beta, los resultados fueron mixtos. La beta absoluta aumentó en Fp2 durante música estresante, pero la beta relativa fue mayor durante música relajante en ambos canales. Esto indica que la interpretación depende de si se analiza potencia absoluta o relativa.
+
+La condición de parpadeo permitió identificar artefactos oculares claros. Se detectaron 92 eventos en Fp1 y 94 eventos en Fp2 mayores a 80 µV, confirmando la alta sensibilidad de los electrodos frontales a movimientos oculares [6], [7].
+
+Finalmente, el análisis permitió reconocer la importancia del filtrado, la calidad de contacto de los electrodos y el control de artefactos en EEG. Los resultados deben considerarse exploratorios y no clínicos, debido al número reducido de participantes y a la sensibilidad de la señal EEG a interferencias.
 
 ---
 
