@@ -67,7 +67,7 @@ Completar esta sección con los datos reales del laboratorio:
 > **Dónde colocar imagen del equipo:**  
 >
 > ```markdown
-> ![Equipo EEG utilizado](figures/protocolo/equipo_eeg.png)
+> ![Equipo EEG utilizado](Archivos/materiales.jpeg)
 > ```
 
 ---
