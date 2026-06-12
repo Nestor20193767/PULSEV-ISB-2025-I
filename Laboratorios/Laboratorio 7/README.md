@@ -1,78 +1,10 @@
-# Informe de Laboratorio: Adquisición y análisis de señales EEG
+# Informe de Laboratorio 7: Adquisición y análisis de señales EEG
 
 ## Descripción general
 
 Este repositorio contiene el informe y los recursos asociados al laboratorio de electroencefalografía (EEG), orientado a observar la señal cerebral en diferentes condiciones experimentales: reposo basal, ojos abiertos, artefactos por parpadeo, artefactos por masticación, música relajante y música estresante.
 
 El objetivo principal del laboratorio es comparar visual y cuantitativamente cómo cambia la señal EEG entre una condición basal controlada y condiciones que pueden modificar la actividad registrada o introducir artefactos fisiológicos.
-
----
-
-## Estructura recomendada del repositorio
-
-```text
-EEG_Laboratorio/
-│
-├── README.md
-├── informe/
-│   └── Informe_EEG.pdf
-│
-├── data/
-│   ├── raw/
-│   │   ├── basal.csv
-│   │   ├── ojos_abiertos.csv
-│   │   ├── parpadeo.csv
-│   │   ├── masticacion.csv
-│   │   ├── musica_relajante.csv
-│   │   └── musica_estresante.csv
-│   │
-│   └── processed/
-│       ├── basal_filtrada.csv
-│       ├── ojos_abiertos_filtrada.csv
-│       ├── parpadeo_filtrada.csv
-│       ├── masticacion_filtrada.csv
-│       ├── musica_relajante_filtrada.csv
-│       └── musica_estresante_filtrada.csv
-│
-├── scripts/
-│   ├── 01_cargar_senal.py
-│   ├── 02_preprocesamiento.py
-│   ├── 03_graficas_temporales.py
-│   ├── 04_analisis_frecuencia.py
-│   └── 05_comparacion_condiciones.py
-│
-├── notebooks/
-│   └── EEG_Analisis.ipynb
-│
-├── figures/
-│   ├── protocolo/
-│   │   └── montaje_eeg.png
-│   │
-│   ├── raw_signals/
-│   │   ├── basal_raw.png
-│   │   ├── ojos_abiertos_raw.png
-│   │   ├── parpadeo_raw.png
-│   │   ├── masticacion_raw.png
-│   │   ├── musica_relajante_raw.png
-│   │   └── musica_estresante_raw.png
-│   │
-│   ├── filtered_signals/
-│   │   ├── basal_filtrada.png
-│   │   ├── ojos_abiertos_filtrada.png
-│   │   ├── parpadeo_filtrada.png
-│   │   ├── masticacion_filtrada.png
-│   │   ├── musica_relajante_filtrada.png
-│   │   └── musica_estresante_filtrada.png
-│   │
-│   └── results/
-│       ├── comparacion_temporal.png
-│       ├── comparacion_psd.png
-│       ├── potencia_bandas.png
-│       └── artefactos_eeg.png
-│
-└── references/
-    └── referencias.bib
-```
 
 ---
 
@@ -106,18 +38,15 @@ La condición basal se utilizó como referencia inicial. Las condiciones de parp
 
 ### 2.1 Participante
 
-La adquisición fue realizada en un participante voluntario durante una sesión de laboratorio. El participante permaneció sentado, procurando reducir movimientos corporales durante las condiciones de reposo y estimulación.
-
-Completar los siguientes datos si el docente los solicita:
+La adquisición fue realizada en un participante voluntario del grupo durante una sesión de laboratorio. El participante permaneció sentado, procurando reducir movimientos corporales durante las condiciones de reposo y estimulación.
 
 | Variable | Descripción |
 |---|---|
 | Participante | Participante 01 |
-| Edad | [Completar] |
-| Sexo | [Completar si corresponde] |
-| Condición de salud relevante | [Completar / No reportado] |
-| Fecha de adquisición | [Completar] |
-| Lugar de adquisición | [Completar] |
+| Edad | 22 |
+| Sexo | Femenino |
+| Fecha de adquisición | 08/05/2026 |
+| Lugar de adquisición | UPCH La Molina |
 
 ---
 
@@ -127,15 +56,13 @@ Completar esta sección con los datos reales del laboratorio:
 
 | Elemento | Descripción |
 |---|---|
-| Sistema EEG | [Completar: marca/modelo] |
-| Número de canales | [Completar] |
-| Frecuencia de muestreo | [Completar] Hz |
-| Electrodos utilizados | [Completar] |
-| Software de adquisición | [Completar] |
-| Computadora/interfaz | [Completar] |
-| Audífonos/parlantes | [Completar] |
-| Música relajante | [Completar nombre o tipo de audio] |
-| Música estresante | [Completar nombre o tipo de audio] |
+| Sistema EEG |  BITalino (r)evolution Assembled Core BT  |
+| Número de canales | 2 |
+| Frecuencia de muestreo | 1000 Hz |
+| Electrodos utilizados | Electrodos desechables |
+| Software de adquisición | OpenSignal |
+| Música relajante | Elegida por Usuario |
+| Música estresante | Elegida por Usuario |
 
 > **Dónde colocar imagen del equipo:**  
 >
