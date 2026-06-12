@@ -133,8 +133,8 @@ El protocolo consistió en seis etapas consecutivas de adquisición EEG. Primero
     <td>2 min</td>
     <td>Participante escucha música asociada a relajación.</td>
     <td>
-      <a href="https://drive.google.com/file/d/12hClvLvw1rO4btofTcIR0AKRyeznKeQ/view?usp=sharing">
-        <img src="https://drive.google.com/thumbnail?id=12hClvLvw1rO4btofTcIR0AKRyeznKeQ" width="150"/>
+      <a href="https://drive.google.com/file/d/12hClvLvw1ryo4btofTcIR0AKRyeznKeQ/view?usp=sharing">
+        <img src="https://drive.google.com/thumbnail?id=12hClvLvw1ryo4btofTcIR0AKRyeznKeQ" width="150"/>
       </a>
     </td>
   </tr>
