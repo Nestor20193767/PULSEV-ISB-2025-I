@@ -1,0 +1,13 @@
+Participante,Condicion,Archivo_disponible,Duracion_s,N_picos_R,Calidad_ok
+P01,basal,True,300.9,428,True
+P01,cognitiva,True,340.05,484,True
+P01,recuperacion,True,302.4,430,True
+P02,basal,True,300.75,363,True
+P02,cognitiva,True,251.55,340,True
+P02,recuperacion,True,301.05,368,True
+P03,basal,True,300.9,376,True
+P03,cognitiva,True,243.45,320,False
+P03,recuperacion,True,300.75,389,True
+P04,basal,True,300.45,423,True
+P04,cognitiva,True,236.1,336,False
+P04,recuperacion,True,303.75,428,True
