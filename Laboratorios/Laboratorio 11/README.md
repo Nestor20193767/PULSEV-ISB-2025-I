@@ -5,7 +5,7 @@
 
 Este repositorio contiene el avance del proyecto orientado al análisis de la recuperación autonómica posterior a una tarea de carga cognitiva en estudiantes universitarios, utilizando señales de electrocardiografía (ECG) y métricas de variabilidad de la frecuencia cardíaca (HRV).
 
-En este avance se realizó una adquisición piloto con **3 participantes**. Cada participante fue evaluado en tres fases consecutivas:
+En este avance se realizó una adquisición con **3 participantes**. Cada participante fue evaluado en tres fases consecutivas:
 
 1. **Reposo basal**
 2. **Tarea cognitiva tipo 2-back**
@@ -19,7 +19,7 @@ Además, antes del inicio del protocolo se aplicó la **Escala de Estrés Percib
 
 ## Objetivo del avance
 
-Realizar una primera adquisición piloto de señales ECG en estudiantes universitarios, siguiendo un protocolo experimental estructurado que permita registrar la actividad cardíaca durante reposo basal, carga cognitiva y recuperación fisiológica.
+Realizar una primera adquisición de señales ECG en estudiantes universitarios, siguiendo un protocolo experimental estructurado que permita registrar la actividad cardíaca durante reposo basal, carga cognitiva y recuperación fisiológica.
 
 ### Objetivos específicos
 
@@ -36,7 +36,7 @@ Realizar una primera adquisición piloto de señales ECG en estudiantes universi
 
 ## Participantes
 
-La adquisición piloto fue realizada en **3 estudiantes universitarios**.
+La adquisición fue realizada en **3 estudiantes universitarios**.
 
 ### Criterios de inclusión
 
