@@ -64,9 +64,10 @@ Completar esta sección con los datos reales del laboratorio:
 | Música relajante | Elegida por Usuario |
 | Música estresante | Elegida por Usuario |
 
-> **Dónde colocar imagen del equipo:**  
 >
-![Equipo EEG utilizado](Archivos/materiales.jpeg)
+### 📷 Foto de conexiones — BITalino y cables
+
+<img src="Archivos/materiales.jpeg" width="400"/>
 
 > *Descripción: Vista del sensor EEG ensamblado conectado al BITalino (r)evolution Core BT mediante el cable de referencia en el puerto analógico correspondiente.*
 
