@@ -196,155 +196,157 @@ Bandas EEG de referencia:
 | Theta | 4-8 Hz |
 | Alfa | 8-13 Hz |
 | Beta | 13-30 Hz |
-| Gamma | >30 Hz |
-
-> **Importante:** Los rangos pueden variar ligeramente según la referencia usada. En el informe se debe indicar qué rangos fueron utilizados y mantenerlos constantes en todo el análisis.
+| Gamma | 30-45 Hz |
 
 ---
 
 ## 3. Resultados
 
-En esta sección se deben presentar las figuras obtenidas y describir brevemente lo que se observa en cada condición. No basta con colocar imágenes; cada figura debe tener una interpretación breve.
+En esta sección se presentan las figuras obtenidas.
 
 ---
 
-### 3.1 Señales EEG crudas
+### 3.1 Señales EEG crudas y filtradas
 
-Colocar aquí las gráficas de las señales sin filtrar.
-
-```markdown
-![Señal basal cruda](figures/raw_signals/basal_raw.png)
-
-![Señal con ojos abiertos cruda](figures/raw_signals/ojos_abiertos_raw.png)
-
-![Señal durante parpadeo cruda](figures/raw_signals/parpadeo_raw.png)
-
-![Señal durante masticación cruda](figures/raw_signals/masticacion_raw.png)
-
-![Señal durante música relajante cruda](figures/raw_signals/musica_relajante_raw.png)
-
-![Señal durante música estresante cruda](figures/raw_signals/musica_estresante_raw.png)
-```
-
-Descripción sugerida:
+![Basal cruda vs filtrada Fp1](Archivos/basal_ojos_cerrados_Fp1_raw_vs_filtrada.png)
+![Basal cruda vs filtrada Fp2](Archivos/basal_ojos_cerrados_Fp2_raw_vs_filtrada.png)
 
 - En la condición basal se espera una señal más estable debido a la reducción de estímulos externos.
+
+![Ojos abiertos cruda vs filtrada Fp1](Archivos/ojos_abiertos_Fp1_raw_vs_filtrada.png)
+![Ojos abiertos cruda vs filtrada Fp2](Archivos/ojos_abiertos_Fp2_raw_vs_filtrada.png)
+
 - En ojos abiertos pueden aparecer cambios asociados a mayor entrada visual.
+
+![Parpadeo cruda vs filtrada Fp1](Archivos/parpadeo_Fp1_raw_vs_filtrada.png)
+![Parpadeo cruda vs filtrada Fp2](Archivos/parpadeo_Fp2_raw_vs_filtrada.png)
+
 - En parpadeo se esperan deflexiones de gran amplitud producidas por actividad ocular.
+
+![Masticación cruda vs filtrada Fp1](Archivos/masticacion_Fp1_raw_vs_filtrada.png)
+![Masticación cruda vs filtrada Fp2](Archivos/masticacion_Fp2_raw_vs_filtrada.png)
+
 - En masticación se espera mayor contaminación por actividad muscular.
+
+![Música relajante cruda vs filtrada Fp1](Archivos/musica_relajante_Fp1_raw_vs_filtrada.png) 
+![Música relajante cruda vs filtrada Fp2](Archivos/musica_relajante_Fp2_raw_vs_filtrada.png) 
+
+![Música estresante cruda vs filtrada Fp1](Archivos/musica_estresante_Fp1_raw_vs_filtrada.png)
+![Música estresante cruda vs filtrada Fp2](Archivos/musica_estresante_Fp2_raw_vs_filtrada.png)
+
 - En música relajante y estresante se pueden explorar cambios de amplitud o potencia espectral, aunque no deben interpretarse de forma concluyente si solo se tiene un participante.
 
----
-
-### 3.2 Señales filtradas
-
-Colocar aquí las gráficas luego del preprocesamiento.
-
-```markdown
-![Señal basal filtrada](figures/filtered_signals/basal_filtrada.png)
-
-![Señal ojos abiertos filtrada](figures/filtered_signals/ojos_abiertos_filtrada.png)
-
-![Señal parpadeo filtrada](figures/filtered_signals/parpadeo_filtrada.png)
-
-![Señal masticación filtrada](figures/filtered_signals/masticacion_filtrada.png)
-
-![Señal música relajante filtrada](figures/filtered_signals/musica_relajante_filtrada.png)
-
-![Señal música estresante filtrada](figures/filtered_signals/musica_estresante_filtrada.png)
-```
-
-Descripción sugerida:
-
-- Comparar si el filtrado redujo ruido de alta frecuencia o ruido de red.
-- Indicar si los artefactos siguen siendo visibles incluso después del filtrado.
-- Explicar si se conservaron los segmentos con artefactos porque forman parte del objetivo del laboratorio.
 
 ---
 
-### 3.3 Comparación entre condiciones
+### 3.2 PSD de Welch por condición
 
-Colocar una figura comparativa con todas las condiciones o con ventanas representativas.
+Se calcula la densidad espectral de potencia usando Welch con segmento de 2 s. Esto permite observar qué frecuencias tienen mayor contribución en cada condición.
 
-```markdown
-![Comparación temporal entre condiciones](figures/results/comparacion_temporal.png)
-```
+|   |condition	| channel	frequency_hz | psd_uv2_per_hz |
+|0	|basal_ojos_cerrados	| Fp1	| 0.0	| 437.023856 |
+|1	|basal_ojos_cerrados	| Fp1	| 0.5	| 3158.686066 | 
+|2	|basal_ojos_cerrados	| Fp1	| 1.0	| 15720.109946 | 
+|3	|basal_ojos_cerrados	| Fp1	| 1.5	| 13457.445632 |
+|4	|basal_ojos_cerrados	| Fp1	| 2.0	| 5207.903244 |
 
-Tabla sugerida:
 
-| Condición | Observación principal | Interpretación |
-|---|---|---|
-| Basal | [Completar] | Señal de referencia con menor estimulación externa. |
-| Ojos abiertos | [Completar] | Posible cambio por procesamiento visual. |
-| Parpadeo | [Completar] | Artefacto ocular visible. |
-| Masticación | [Completar] | Artefacto muscular visible. |
-| Música relajante | [Completar] | Posible cambio asociado a estado de relajación. |
-| Música estresante | [Completar] | Posible cambio asociado a estímulo auditivo estresante. |
+![PSD Welch por condicion Fp1](Archivos/PSD_Welch_comparacion_Fp1.png)
+![PSD Welch por condicion Fp2](Archivos/PSD_Welch_comparacion_Fp2.png)
 
 ---
 
-### 3.4 Análisis en frecuencia
+### 3.3 Potencia por bandas EEG
 
-Colocar aquí la densidad espectral de potencia o el análisis por bandas.
+Se calcula la potencia absoluta y relativa por ventanas de 2 s en las bandas:
 
-```markdown
-![Comparación de PSD](figures/results/comparacion_psd.png)
+| Banda | Rango aproximado |
+|---|---:|
+| Delta | 0.5-4 Hz |
+| Theta | 4-8 Hz |
+| Alfa | 8-13 Hz |
+| Beta | 13-30 Hz |
+| Gamma | 30-45 Hz |
 
-![Potencia por bandas EEG](figures/results/potencia_bandas.png)
-```
+[Potencia de bandas por epoca](Archivos/potencia_bandas_por_epoca.csv)
 
-Descripción sugerida:
+[Resumen Potencia de bandas por epoca](Archivos/resumen_potencia_bandas.csv)
 
-- Comparar la potencia relativa entre condiciones.
-- Reportar si existe mayor potencia en banda alfa durante el reposo con ojos cerrados o aislamiento sensorial.
-- Comparar si los artefactos aumentan la potencia en rangos específicos.
-- Evitar conclusiones clínicas si el análisis corresponde solo a una práctica de laboratorio.
 
 ---
 
-### 3.5 Artefactos observados
+### 3.4 Comparación de potencia alfa: ojos cerrados vs ojos abiertos
+Se usa la condición basal como equivalente de ojos cerrados / aislamiento parcial y se compara contra la condición ojos abiertos. La comparación se realiza con potencia alfa absoluta y relativa por ventanas de 2 s.
 
-Colocar una imagen donde se indiquen claramente los segmentos de parpadeo y masticación.
+[Comparacion de potencia Alfa](Archivos/test_alpha_ojos_cerrados_vs_abiertos.csv)
 
-```markdown
-![Artefactos EEG observados](figures/results/artefactos_eeg.png)
-```
+*Gráfico comparativo de alfa relativa por canal*
 
-Descripción sugerida:
+![Comparacion de potencia alfa relativa Fp1](Archivos/alpha_rel_ojos_cerrados_vs_abiertos_Fp1.png)
+![Comparacion de potencia alfa relativa Fp2](Archivos/alpha_rel_ojos_cerrados_vs_abiertos_Fp2.png)
 
-- Los parpadeos suelen observarse como deflexiones marcadas y repetitivas.
-- La masticación puede generar componentes de mayor frecuencia debido a actividad muscular facial.
-- Estos artefactos deben ser identificados antes de interpretar la señal como actividad cerebral.
+---
+
+### 3.5 Incremento de beta durante condición de carga/estrés
+Como el protocolo descrito no incluye una tarea cognitiva clásica, este notebook usa por defecto:
+-Condición basal/comparación: musica_relajante
+-Condición de carga/estrés: musica_estresante
+
+[Actividad beta de carga/estres](Archivos/test_beta_relajante_vs_estresante.csv)
+
+*Gráfico comparativo de beta relativa por canal*
+
+![Comparación de potencia beta relativa Fp1](Archivos/beta_rel_musica_relajante_vs_musica_estresante_Fp1.png)
+![Comparación de potencia beta relativa Fp2](Archivos/beta_rel_musica_relajante_vs_musica_estresante_Fp2.png)
+
+
+
+---
+
+### 3.6 Detección de artefactos de parpadeo
+El algoritmo busca picos en la señal centrada respecto a su mediana. Se contabilizan picos cuya amplitud absoluta supere 80 µV, separados al menos 0.25 s.
+
+[Conteo de artefactos](Archivos/conteo_artefactos_parpadeo.csv)
+
+*Gráfico de detección de artefactos*
+
+![Detección de artefactos de parpadeo Fp1](Archivos/parpadeos_detectados_Fp1.png)
+![Detección de artefactos de parpadeo Fp2](Archivos/parpadeos_detectados_Fp2.png)
+
+
+---
+
+### 3.6 Comparación Fp1 vs Fp2
+La comparación se hace por potencia relativa de bandas.
+
+[comparacion Fp1 vs Fp2](Archivos/comparacion_Fp1_Fp2.csv)
+
+*Gráficos de comparacion Fp1 vs Fp2*
+
+![Basal ojos cerrados Fp1 vs Fp2](Archivos/Fp1_vs_Fp2_basal_ojos_cerrados.png)
+![Basal ojos cerrados Fp1 vs Fp2](Archivos/Fp1_vs_Fp2_ojos_abiertos.png)
+![Basal ojos cerrados Fp1 vs Fp2](Archivos/Fp1_vs_Fp2_parpadeo.png)
+![Basal ojos cerrados Fp1 vs Fp2](Archivos/Fp1_vs_Fp2_masticacion.png)
+![Basal ojos cerrados Fp1 vs Fp2](Archivos/Fp1_vs_Fp2_musica_relajante.png)
+![Basal ojos cerrados Fp1 vs Fp2](Archivos/Fp1_vs_Fp2_musica_estresante.png)
+
+
 
 ---
 
 ## 4. Discusión
 
-Los resultados del laboratorio permiten comparar diferentes condiciones de adquisición EEG y reconocer la importancia del control experimental. La condición basal fue diseñada para reducir estímulos externos mediante aislamiento parcial de ojos y oídos, por lo que puede utilizarse como referencia para contrastar las demás condiciones.
+### ¿Qué banda de frecuencia predomina al cerrar los ojos?
+En la condición basal con ojos cubiertos o cerrados se evaluó la potencia relativa de las bandas EEG. Según los resultados obtenidos, la banda predominante fue [completar: alfa/theta/beta/etc.]. En EEG, la banda alfa suele aumentar durante reposo con ojos cerrados, aunque este efecto puede observarse mejor en regiones posteriores que en derivaciones frontales.
 
-La condición de ojos abiertos permite observar cómo la entrada visual puede modificar la actividad registrada. En comparación, la condición basal o de ojos cerrados puede presentar mayor actividad en rangos asociados al reposo, como la banda alfa, dependiendo de la ubicación de los electrodos y de la calidad de la señal.
+### ¿Qué filtro es imprescindible para EEG y por qué?
+Para EEG es imprescindible controlar el contenido de frecuencia mediante un filtro pasa banda, porque la señal EEG es de baja amplitud y puede contaminarse por deriva DC, movimiento y ruido de alta frecuencia. En este laboratorio, el canal EEG de BITalino ya incluye un filtro hardware de aproximadamente 0.8-48 Hz, por lo que se atenúan componentes lentas y frecuencias por encima del rango EEG principal. Además, si aparece contaminación de red eléctrica, se puede usar un filtro notch de 50/60 Hz; sin embargo, en este caso puede no ser necesario porque el hardware ya limita la banda hasta aproximadamente 48 Hz.
 
-Las condiciones de parpadeo y masticación no deben interpretarse como actividad cerebral pura. Su valor en el laboratorio está en que permiten reconocer artefactos fisiológicos. El parpadeo introduce actividad ocular que puede dominar la señal EEG, mientras que la masticación introduce actividad muscular, principalmente por contracción de músculos faciales y mandibulares.
+### ¿Puedes modular conscientemente tu señal EEG? Da un ejemplo.
+Sí, algunos patrones EEG pueden modificarse de manera consciente o voluntaria. Un ejemplo simple es abrir y cerrar los ojos: al cerrar los ojos, puede aumentar la actividad alfa en reposo. Otro ejemplo es el parpadeo, aunque este no representa modulación cerebral pura, sino un artefacto ocular claramente visible en la señal.
 
-Las condiciones con música relajante y música estresante permiten una exploración preliminar de cambios inducidos por estímulos auditivos. Sin embargo, si solo se evaluó un participante, los resultados deben interpretarse como descriptivos y no concluyentes. Para afirmar diferencias entre relajación y estrés sería necesario evaluar más participantes, controlar el volumen, el tipo de música, el orden de presentación, el estado emocional previo y aplicar pruebas estadísticas.
-
-### Limitaciones
-
-- Se trabajó con un número reducido de participantes.
-- La respuesta a la música puede variar según preferencias personales.
-- La señal EEG es sensible a movimiento, impedancia de electrodos, parpadeos y actividad muscular.
-- Si no se controló el orden de las condiciones, puede existir efecto de fatiga o habituación.
-- Si no se registraron marcadores temporales, la segmentación puede depender de anotaciones manuales.
-
-### Mejoras propuestas
-
-- Registrar más participantes.
-- Añadir marcadores de eventos durante la adquisición.
-- Medir impedancia de electrodos antes de iniciar.
-- Usar el mismo volumen para ambos tipos de música.
-- Aplicar cuestionarios breves de relajación o estrés percibido.
-- Comparar potencia relativa por bandas EEG.
-- Reportar claramente filtros, frecuencia de muestreo y canales utilizados.
+### ¿Se observan diferencias entre Fp1 y Fp2? ¿Por qué podrían ocurrir?
+Si se adquirieron Fp1 y Fp2, las diferencias pueden deberse a varios factores: diferencias de impedancia entre electrodos, contacto desigual con la piel, asimetría en la colocación, actividad ocular lateralizada, actividad muscular facial o diferencias reales en la actividad registrada por cada derivación. Por ello, antes de interpretar diferencias fisiológicas, se debe verificar la calidad de la señal y la presencia de artefactos.
 
 ---
 
