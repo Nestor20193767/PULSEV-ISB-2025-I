@@ -234,7 +234,7 @@ En esta sección se presentan las figuras obtenidas.
 ![Música estresante cruda vs filtrada Fp1](Archivos/musica_estresante_Fp1_raw_vs_filtrada.png)
 ![Música estresante cruda vs filtrada Fp2](Archivos/musica_estresante_Fp2_raw_vs_filtrada.png)
 
-- En música relajante y estresante se pueden explorar cambios de amplitud o potencia espectral, aunque no deben interpretarse de forma concluyente si solo se tiene un participante.
+- En música relajante y estresante se pueden explorar cambios de amplitud o potencia espectral.
 
 
 ---
