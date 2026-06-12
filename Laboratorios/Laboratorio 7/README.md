@@ -87,7 +87,7 @@ El protocolo consistió en seis etapas consecutivas de adquisición EEG. Primero
 
 **Diagrama del protocolo**  
 
-[Protocolo experimental](Archivos/protocolo_eeg_.svg)
+![Protocolo experimental](Archivos/protocolo_eeg_.svg)
 
 ---
 
