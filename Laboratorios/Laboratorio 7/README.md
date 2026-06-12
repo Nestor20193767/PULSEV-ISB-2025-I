@@ -166,12 +166,9 @@ En esta sección se presentan las figuras obtenidas.
 
 Se calcula la densidad espectral de potencia usando Welch con segmento de 2 s. Esto permite observar qué frecuencias tienen mayor contribución en cada condición.
 
-|   |condition	| channel	frequency_hz | psd_uv2_per_hz |
-|0	|basal_ojos_cerrados	| Fp1	| 0.0	| 437.023856 |
-|1	|basal_ojos_cerrados	| Fp1	| 0.5	| 3158.686066 | 
-|2	|basal_ojos_cerrados	| Fp1	| 1.0	| 15720.109946 | 
-|3	|basal_ojos_cerrados	| Fp1	| 1.5	| 13457.445632 |
-|4	|basal_ojos_cerrados	| Fp1	| 2.0	| 5207.903244 |
+![PSD Welch por condicion FP1 y Fp2](Archivos/psd_welch_por_condicion.csv)
+
+*Gráfico comparativo de alfa relativa por canal*
 
 
 ![PSD Welch por condicion Fp1](Archivos/PSD_Welch_comparacion_Fp1.png)
