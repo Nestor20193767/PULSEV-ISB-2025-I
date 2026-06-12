@@ -90,7 +90,9 @@ El protocolo consistió en seis etapas consecutivas de adquisición EEG. Primero
     <td>Basal</td>
     <td>2 min</td>
     <td>Participante con ojos y oídos cubiertos para reducir estímulos externos.</td>
-    <td>—</td>
+    <td>
+      <img src="Archivos/basal_foto.jpg" width="150"/>
+    </td>
   </tr>
   <tr>
     <td>2</td>
@@ -131,8 +133,8 @@ El protocolo consistió en seis etapas consecutivas de adquisición EEG. Primero
     <td>2 min</td>
     <td>Participante escucha música asociada a relajación.</td>
     <td>
-      <a href="https://drive.google.com/file/d/12hClvLvw1ryo4btofTcIR0AKRyeznKeQ/view?usp=sharing">
-        <img src="https://drive.google.com/thumbnail?id=12hClvLvw1ryo4btofTcIR0AKRyeznKeQ" width="150"/>
+      <a href="https://drive.google.com/file/d/12hClvLvw1rO4btofTcIR0AKRyeznKeQ/view?usp=sharing">
+        <img src="https://drive.google.com/thumbnail?id=12hClvLvw1rO4btofTcIR0AKRyeznKeQ" width="150"/>
       </a>
     </td>
   </tr>
@@ -141,9 +143,14 @@ El protocolo consistió en seis etapas consecutivas de adquisición EEG. Primero
     <td>Música estresante</td>
     <td>2 min</td>
     <td>Participante escucha música asociada a estrés o incomodidad.</td>
-    <td>—</td>
+    <td>
+      <a href="https://drive.google.com/file/d/1sONFTjYGD73j5C1ihIf8p1oaNnlmARoF/view?usp=sharing">
+        <img src="https://drive.google.com/thumbnail?id=1sONFTjYGD73j5C1ihIf8p1oaNnlmARoF" width="150"/>
+      </a>
+    </td>
   </tr>
 </table>
+
 
 **Diagrama del protocolo**  
 ![Protocolo experimental](Archivos/protocolo_eeg_.svg)
