@@ -89,6 +89,74 @@ El protocolo consistió en seis etapas consecutivas de adquisición EEG. Primero
 **Diagrama del protocolo**  
 ![Protocolo experimental](Archivos/protocolo_eeg_.svg)
 
+<table>
+  <tr>
+    <th>Orden</th>
+    <th>Condición</th>
+    <th>Duración aproximada</th>
+    <th>Descripción</th>
+    <th>Evidencia</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Basal</td>
+    <td>2 min</td>
+    <td>Participante con ojos y oídos cubiertos para reducir estímulos externos.</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Ojos abiertos</td>
+    <td>2 min</td>
+    <td>Participante mirando un punto fijo.</td>
+    <td>
+      <a href="https://drive.google.com/file/d/1qgGC5iyXiEzm0AufXN0GikcFcLbSlHOp/view?usp=sharing">
+        <img src="https://drive.google.com/thumbnail?id=1qgGC5iyXiEzm0AufXN0GikcFcLbSlHOp" width="150"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Parpadeo</td>
+    <td>1 min</td>
+    <td>Participante realiza parpadeos voluntarios.</td>
+    <td>
+      <a href="https://drive.google.com/file/d/1aGre1lXWi4Q4yuad_V5Qz1Us7OHK-GDV/view?usp=sharing">
+        <img src="https://drive.google.com/thumbnail?id=1aGre1lXWi4Q4yuad_V5Qz1Us7OHK-GDV" width="150"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Masticación</td>
+    <td>1 min</td>
+    <td>Participante mastica para inducir artefactos musculares.</td>
+    <td>
+      <a href="https://drive.google.com/file/d/1VARRKz1GdWXG3Bj04vXgCjPMPdc2nPHw/view?usp=sharing">
+        <img src="https://drive.google.com/thumbnail?id=1VARRKz1GdWXG3Bj04vXgCjPMPdc2nPHw" width="150"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>Música relajante</td>
+    <td>2 min</td>
+    <td>Participante escucha música asociada a relajación.</td>
+    <td>
+      <a href="https://drive.google.com/file/d/12hClvLvw1ryo4btofTcIR0AKRyeznKeQ/view?usp=sharing">
+        <img src="https://drive.google.com/thumbnail?id=12hClvLvw1ryo4btofTcIR0AKRyeznKeQ" width="150"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>Música estresante</td>
+    <td>2 min</td>
+    <td>Participante escucha música asociada a estrés o incomodidad.</td>
+    <td>—</td>
+  </tr>
+</table>
+
 ---
 
 ### 2.4 Preprocesamiento de la señal
