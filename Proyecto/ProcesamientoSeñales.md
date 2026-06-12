@@ -291,42 +291,42 @@ En este avance, el caso más interpretable fue P04, con una recuperación parcia
 
 ### ECG con picos R detectados
 
-![ECG P01](results/figures/P01_ECG_preview_picosR.png)
-![ECG P02](results/figures/P02_ECG_preview_picosR.png)
-![ECG P03](results/figures/P03_ECG_preview_picosR.png)
-![ECG P04](results/figures/P04_ECG_preview_picosR.png)
+![ECG P01](Señales/Procesamiento/P01_ECG_preview_picosR.png)
+![ECG P02](Señales/Procesamiento/P02_ECG_preview_picosR.png)
+![ECG P03](Señales/Procesamiento/P03_ECG_preview_picosR.png)
+![ECG P04](Señales/Procesamiento/P04_ECG_preview_picosR.png)
 
 
 ### Distribución de intervalos RR
 
-![Histograma RR P01](results/figures/P01_histograma_RR.png)
-![Histograma RR P02](results/figures/P02_histograma_RR.png)
-![Histograma RR P03](results/figures/P03_histograma_RR.png)
-![Histograma RR P04](results/figures/P04_histograma_RR.png)
+![Histograma RR P01](Señales/Procesamiento/P01_histograma_RR.png)
+![Histograma RR P02](Señales/Procesamiento/P02_histograma_RR.png)
+![Histograma RR P03](Señales/Procesamiento/P03_histograma_RR.png)
+![Histograma RR P04](Señales/Procesamiento/P04_histograma_RR.png)
 
 
 ### RMSSD deslizante
 
 
-![RMSSD P01](results/figures/P01_RMSSD_deslizante.png)
-![RMSSD P02](results/figures/P02_RMSSD_deslizante.png)
-![RMSSD P03](results/figures/P03_RMSSD_deslizante.png)
-![RMSSD P04](results/figures/P04_RMSSD_deslizante.png)
+![RMSSD P01](Señales/Procesamiento/P01_RMSSD_deslizante.png)
+![RMSSD P02](Señales/Procesamiento/P02_RMSSD_deslizante.png)
+![RMSSD P03](Señales/Procesamiento/P03_RMSSD_deslizante.png)
+![RMSSD P04](Señales/Procesamiento/P04_RMSSD_deslizante.png)
 
 
 ### Comparación global
 
-![Comparación HRV global](results/figures/Comparacion_HRV_global.png)
+![Comparación HRV global](Señales/Procesamiento/Comparacion_HRV_global.png)
 
 
 ### Perfiles individuales
 
-![Perfiles individuales HRV](results/figures/Perfiles_individuales_HRV.png)
+![Perfiles individuales HRV](Señales/Procesamiento/Perfiles_individuales_HRV.png)
 
 
 ### Porcentaje de recuperación
 
-![Porcentaje de recuperación RMSSD](results/figures/Porcentaje_recuperacion_RMSSD.png)
+![Porcentaje de recuperación RMSSD](Señales/Procesamiento/Porcentaje_recuperacion_RMSSD.png)
 
 
 ---
@@ -337,7 +337,7 @@ En este avance, el caso más interpretable fue P04, con una recuperación parcia
 
 | Archivo                        | Descripción                                           |
 | ------------------------------ | ----------------------------------------------------- |
-| `tabla_completitud.csv`        | Verificación de archivos, duración, picos R y calidad |
+| [`tabla_completitud.csv`](Señales/Procesamiento/Porcentaje_recuperacion_RMSSD.png)| Verificación de archivos, duración, picos R y calidad |
 | `tabla_HRV_global.csv`         | Métricas HRV globales por participante y condición    |
 | `tabla_recuperacion_RMSSD.csv` | Cálculo del porcentaje exploratorio de recuperación   |
 | `tabla_RMSSD_ventanas.csv`     | RMSSD calculado por ventanas deslizantes              |
