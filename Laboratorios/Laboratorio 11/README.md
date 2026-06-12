@@ -124,14 +124,6 @@ Indicaciones dadas al participante:
 
 El objetivo de esta fase fue obtener una línea base fisiológica para comparar los cambios producidos durante la tarea cognitiva y durante la recuperación.
 
-### Señales adquiridas
-
-
-```markdown
-![ECG basal](figures/ecg_basal_example.png)
-```
-
----
 
 ## Fase 2: Tarea cognitiva 2-back
 
@@ -149,20 +141,6 @@ Al finalizar la tarea cognitiva, el participante completó el cuestionario **NAS
 * Accuracy de la tarea 2-back.
 * Puntaje total NASA-TLX.
 
-### Señales e imágenes sugeridas
-
-Agregar una imagen de la señal ECG durante la tarea cognitiva de los participantes:
-
-```markdown
-![ECG durante tarea cognitiva](figures/ecg_cognitive_task_example.png)
-```
-
-Agregar una captura de la tarea 2-back:
-
-```markdown
-![Tarea cognitiva 2-back](docs/images/nback_task_screenshot.png)
-```
-
 ---
 
 ## Fase 3: Recuperación fisiológica
@@ -173,13 +151,19 @@ Durante esta fase se continuó registrando ECG con el objetivo de analizar la re
 
 Esta etapa permitirá evaluar posteriormente si las métricas de HRV retornan hacia valores cercanos al estado basal.
 
-### Señal sugerida para agregar
+## Señales Adquiridas
 
-Agregar una imagen de la señal ECG durante recuperación de cada participante:
+Las señales de cada participante se presentan agrupadas por las tres fases del protocolo: basal, carga cognitiva y recuperación.
 
-```markdown
-![ECG durante recuperación](figures/ecg_recovery_example.png)
-```
+### Participante P01
+![ECG Participante 1](Señales/P01_ECG_preview.png)
+
+### Participante P02
+![ECG Participante 2](Señales/P01_ECG_preview.png)
+
+### Participante P03
+![ECG Participante 3](Señales/P01_ECG_preview.png)
+
 ---
 
 ## Cuestionarios aplicados
@@ -192,31 +176,13 @@ Este cuestionario fue aplicado para obtener una medida subjetiva del estrés per
 
 Enlace de las preguntas del Formulario:
 
-```bash
-docs/forms/pss10_form.pdf
-```
+[Formulario aplicado PSS-14](Archivos/PSS-14.pdf)
 
 Enlace del formulario digital:
 
-```markdown
-[PSS-10 - Formulario aplicado](PEGAR_AQUI_LINK_DEL_GOOGLE_FORMS)
-```
 
-### NASA-TLX
+[PSS-10 - Formulario aplicado](https://forms.gle/Yi2TZFLcyzKf48zZ9)
 
-Después de la tarea cognitiva 2-back, cada participante completó el cuestionario **NASA-TLX**, utilizado para evaluar la carga cognitiva percibida.
-
-Se recomienda guardar el formulario en:
-
-```bash
-docs/forms/nasa_tlx_form.pdf
-```
-
-Y enlazarlo en el README:
-
-```markdown
-[NASA-TLX - Formulario aplicado](docs/forms/nasa_tlx_form.pdf)
-```
 
 ---
 
