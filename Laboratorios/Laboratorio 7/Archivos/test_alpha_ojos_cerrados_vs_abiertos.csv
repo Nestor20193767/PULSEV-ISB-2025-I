@@ -1,0 +1,5 @@
+channel,metric,condition_a,condition_b,n_pairs,mean_a,std_a,mean_b,std_b,mean_diff_a_minus_b,t_stat,p_value,interpretation,test_type
+Fp1,alpha_abs,basal_ojos_cerrados,ojos_abiertos,30,2727.9420812387684,1071.5782026122263,2894.7630176269286,1818.9937999531887,-166.82093638816033,-0.41098356366580824,0.6841058080274325,No se encontró diferencia significativa al 5%.,alpha_abs
+Fp2,alpha_abs,basal_ojos_cerrados,ojos_abiertos,30,2383.1483742312007,896.9883678582681,3238.087424597658,1713.9952106360283,-854.9390503664567,-2.688212159780972,0.011777020927873635,Diferencia significativa: ojos abiertos > ojos cerrados/basal.,alpha_abs
+Fp1,alpha_rel,basal_ojos_cerrados,ojos_abiertos,30,0.14796564873707976,0.07794532317357025,0.0961356750200419,0.046416435067563565,0.051829973717037826,3.344863331589896,0.00228566176035291,Diferencia significativa: ojos cerrados/basal > ojos abiertos.,alpha_rel
+Fp2,alpha_rel,basal_ojos_cerrados,ojos_abiertos,30,0.12153844370435692,0.05679511515214681,0.1133460685240164,0.05252579029146199,0.00819237518034051,0.6741587220104301,0.5055491786417594,No se encontró diferencia significativa al 5%.,alpha_rel

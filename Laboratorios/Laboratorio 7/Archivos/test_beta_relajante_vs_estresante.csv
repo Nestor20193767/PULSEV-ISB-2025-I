@@ -1,0 +1,5 @@
+channel,metric,condition_a,condition_b,n_pairs,mean_a,std_a,mean_b,std_b,mean_diff_a_minus_b,t_stat,p_value,interpretation,test_type
+Fp1,beta_abs,musica_relajante,musica_estresante,33,6544.874214572534,2433.129731104304,11067.407814865373,13726.810495456131,-4522.53360029284,-1.9547946139956978,0.0593905541901954,No se encontró diferencia significativa al 5%.,beta_abs
+Fp2,beta_abs,musica_relajante,musica_estresante,33,3742.8749736022496,1128.338407026338,11542.928020919644,20932.235773515313,-7800.053047317394,-2.14504678139778,0.03964115602099971,Diferencia significativa: musica_estresante > musica_relajante.,beta_abs
+Fp1,beta_rel,musica_relajante,musica_estresante,33,0.20801311041940795,0.11423167697773934,0.08781860782896125,0.07827791829415837,0.12019450259044669,5.201650234976871,1.1052752944789186e-05,Diferencia significativa: musica_relajante > musica_estresante.,beta_rel
+Fp2,beta_rel,musica_relajante,musica_estresante,33,0.1666372037997786,0.09660482551926755,0.06928903773628395,0.06814219204094836,0.09734816606349467,4.475407429617699,9.06083998928928e-05,Diferencia significativa: musica_relajante > musica_estresante.,beta_rel
