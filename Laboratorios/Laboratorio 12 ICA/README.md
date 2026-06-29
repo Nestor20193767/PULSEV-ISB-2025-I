@@ -44,57 +44,7 @@ Las condiciones registradas fueron:
 
 ---
 
-## 3. Estructura sugerida del repositorio
-
-Para que el README muestre correctamente las imágenes y tablas en GitHub, se recomienda mantener esta estructura:
-
-```text
-.
-├── README.md
-├── pipeline_eeg_2canales_mne_welch_ica.ipynb
-├── data/
-│   ├── Basal_1.txt
-│   ├── Abrir_PFijo.txt
-│   ├── Parpadeo.txt
-│   ├── Mastic.txt
-│   ├── Music_Relax.txt
-│   └── Music_Estres.txt
-└── Archivos/
-    ├── window_features_all_conditions.csv
-    ├── window_features_with_artifact_flags.csv
-    ├── artifact_report.csv
-    ├── summary_bandpowers_clean.csv
-    ├── comparison_vs_basal.csv
-    ├── time_basal.png
-    ├── time_punto_fijo.png
-    ├── time_parpadeo.png
-    ├── time_masticacion.png
-    ├── time_musica_relax.png
-    ├── time_musica_estres.png
-    ├── psd_clean_Fp1.png
-    ├── psd_clean_Fp2.png
-    ├── ica_muscle_scores.png
-    ├── ica_sources_basal.png
-    ├── ica_sources_punto_fijo.png
-    ├── ica_sources_parpadeo.png
-    ├── ica_sources_masticacion.png
-    ├── ica_sources_musica_relax.png
-    ├── ica_sources_musica_estres.png
-    ├── bar_rel_theta_4_8_Fp1.png
-    ├── bar_rel_alpha_8_13_Fp1.png
-    ├── bar_rel_beta_13_30_Fp1.png
-    ├── bar_rel_gamma_baja_30_45_Fp1.png
-    ├── bar_rel_theta_4_8_Fp2.png
-    ├── bar_rel_alpha_8_13_Fp2.png
-    ├── bar_rel_beta_13_30_Fp2.png
-    └── bar_rel_gamma_baja_30_45_Fp2.png
-```
-
-> Nota: para que las imágenes se muestren en GitHub, los `.png` y `.csv` deben estar dentro de `Archivos/`. Si se cambia el nombre de la carpeta de salida, también deben actualizarse las rutas de las imágenes en este README.
-
----
-
-## 4. Configuración principal del notebook
+## 3. Configuración principal del notebook
 
 La configuración usada en el notebook fue:
 
@@ -114,7 +64,7 @@ La configuración usada en el notebook fue:
 
 ---
 
-## 5. Flujo de procesamiento
+## 4. Flujo de procesamiento
 
 El flujo general del laboratorio fue:
 
@@ -148,7 +98,7 @@ Exportación de tablas CSV y figuras PNG
 
 ---
 
-## 6. Preprocesamiento
+## 5. Preprocesamiento
 
 El preprocesamiento incluyó:
 
@@ -163,7 +113,7 @@ El filtrado se aplicó para conservar las bandas EEG principales y reducir compo
 
 ---
 
-## 7. Visualización temporal de señales
+## 6. Visualización temporal de señales
 
 El notebook genera figuras temporales de los primeros segundos de cada condición. Estas gráficas permiten inspeccionar amplitud, forma de onda y presencia de artefactos evidentes.
 
@@ -193,7 +143,7 @@ El notebook genera figuras temporales de los primeros segundos de cada condició
 
 ---
 
-## 8. Artefactos
+## 7. Artefactos
 
 Las condiciones de **parpadeo** y **masticación** se usaron como condiciones de control para observar artefactos fisiológicos.
 
@@ -214,7 +164,7 @@ Las ventanas marcadas como contaminadas no se usan en el análisis limpio princi
 
 ---
 
-## 9. Tabla de artefactos
+## 8. Tabla de artefactos
 
 El archivo `artifact_report.csv` resume la cantidad de ventanas detectadas como contaminadas por condición y canal.
 
@@ -236,7 +186,7 @@ Este archivo contiene columnas como:
 
 ---
 
-## 10. ICA
+## 9. ICA
 
 Se exploró el uso de **ICA**, análisis de componentes independientes, para identificar posibles componentes asociados a artefactos musculares.
 
@@ -277,7 +227,7 @@ Esto se hizo porque, con solo 2 canales, ICA tiene una capacidad limitada para s
 
 ---
 
-## 11. Análisis espectral con Welch
+## 10. Análisis espectral con Welch
 
 Se aplicó el método de **Welch** para estimar la densidad espectral de potencia, PSD, por condición y canal. El análisis se realizó usando ventanas de 4 segundos con 50 % de solapamiento y segmentos de Welch de 2 segundos.
 
@@ -300,7 +250,7 @@ Las bandas analizadas fueron:
 
 ---
 
-## 12. Potencia por bandas EEG
+## 11. Potencia por bandas EEG
 
 El archivo `summary_bandpowers_clean.csv` resume la potencia promedio por banda EEG, condición y canal, usando únicamente las ventanas consideradas limpias.
 
@@ -342,7 +292,7 @@ Este archivo incluye potencias absolutas y relativas para:
 
 ---
 
-## 13. Comparación frente a basal
+## 12. Comparación frente a basal
 
 Se compararon las condiciones principales frente a la condición basal:
 
@@ -371,7 +321,7 @@ delta_pct_vs_basal_rel_beta_13_30
 
 ---
 
-## 14. Archivos generados
+## 13. Archivos generados
 
 ### Tablas CSV
 
@@ -396,7 +346,7 @@ delta_pct_vs_basal_rel_beta_13_30
 
 ---
 
-## 15. Interpretación general
+## 14. Interpretación general
 
 El análisis temporal permitió observar diferencias visuales entre condiciones y detectar segmentos con artefactos evidentes. Las condiciones de parpadeo y masticación sirvieron como referencia para reconocer artefactos oculares y musculares.
 
@@ -406,19 +356,7 @@ ICA se utilizó únicamente como exploración, ya que la señal cuenta solo con 
 
 ---
 
-## 16. Cómo ejecutar el análisis
 
-1. Abrir el notebook en Google Colab.
-2. Montar Google Drive.
-3. Verificar la ruta de los archivos en `BASE_DIR`.
-4. Verificar que los archivos `.txt` tengan los nombres definidos en `FILES`.
-5. Ejecutar las celdas en orden.
-6. Revisar las figuras generadas en `Archivos/`.
-7. Revisar las tablas `.csv` generadas.
-8. Inspeccionar visualmente ICA antes de activar cualquier remoción de componentes.
-
----
-
-## 17. Conclusión
+## 15. Conclusión
 
 El laboratorio permitió construir un pipeline completo para señales EEG de 2 canales, desde la lectura de archivos de BITalino hasta la extracción de características espectrales. La combinación de revisión visual, detección de artefactos, Welch e ICA exploratorio permitió analizar las diferencias entre condiciones experimentales, manteniendo cuidado metodológico debido a la limitación del bajo número de canales.
