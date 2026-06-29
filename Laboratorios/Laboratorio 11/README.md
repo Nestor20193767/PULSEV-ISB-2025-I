@@ -1,215 +1,362 @@
+# Laboratorio EEG de 2 canales: ICA y análisis espectral con Welch
 
-# Adquisición de ECG para análisis de recuperación autonómica post carga cognitiva
-
-## Descripción del proyecto
-
-Este repositorio contiene el avance del proyecto orientado al análisis de la recuperación autonómica posterior a una tarea de carga cognitiva en estudiantes universitarios, utilizando señales de electrocardiografía (ECG) y métricas de variabilidad de la frecuencia cardíaca (HRV).
-
-En este avance se realizó una adquisición con **3 participantes**. Cada participante fue evaluado en tres fases consecutivas:
-
-1. **Reposo basal**
-2. **Tarea cognitiva tipo 2-back**
-3. **Recuperación fisiológica**
-
-Además, antes del inicio del protocolo se aplicó la **Escala de Estrés Percibido PSS-10** como medida subjetiva del estrés percibido.
-
-> **Nota:** Este avance se enfoca únicamente en la adquisición de datos y en la documentación del protocolo experimental. El procesamiento de señales, la detección de picos R, el cálculo de intervalos R-R y la extracción de métricas HRV serán desarrollados en una etapa posterior.
+Este repositorio contiene el procesamiento de señales EEG adquiridas con BITalino usando un pipeline en Python/Colab basado en **MNE**, **ICA** y **Welch**. El objetivo principal fue visualizar artefactos fisiológicos, extraer potencia espectral por bandas EEG y comparar distintas condiciones experimentales frente a una condición basal.
 
 ---
 
-## Objetivo del avance
+## 1. Descripción general
 
-Realizar una primera adquisición de señales ECG en estudiantes universitarios, siguiendo un protocolo experimental estructurado que permita registrar la actividad cardíaca durante reposo basal, carga cognitiva y recuperación fisiológica.
+En este laboratorio se trabajó con una señal EEG de **2 canales** registrada en diferentes condiciones experimentales. El procesamiento incluyó lectura de archivos `.txt`, conversión de unidades, filtrado, detección de ventanas contaminadas por artefactos, análisis exploratorio con ICA y estimación de la densidad espectral de potencia mediante Welch.
 
-### Objetivos específicos
+El análisis se realizó en el notebook:
 
-* Implementar el protocolo de adquisición de ECG.
-* Registrar ECG continuo durante las tres fases experimentales.
-* Aplicar la escala PSS-10 antes de la adquisición.
-* Aplicar una tarea cognitiva tipo 2-back.
-* Registrar el desempeño de la tarea cognitiva.
-* Aplicar NASA-TLX al finalizar la tarea cognitiva.
-* Verificar la calidad inicial de la señal ECG.
-* Organizar los datos para su posterior procesamiento.
+```text
+pipeline_eeg_2canales_mne_welch_ica.ipynb
+```
 
 ---
 
-## Participantes
+## 2. Adquisición de señales
 
-La adquisición fue realizada en **3 estudiantes universitarios**.
+La adquisición se realizó con **BITalino EEG**, usando **2 canales** nombrados en el código como:
 
-### Criterios de inclusión
+```text
+Fp1
+Fp2
+```
 
-* Estudiantes universitarios entre 18 y 30 años.
-* Ritmo cardíaco sinusal normal.
-* Sin medicación que altere la frecuencia cardíaca.
+La frecuencia de muestreo configurada fue:
 
-### Criterios de exclusión
+```text
+FS = 1000 Hz
+```
 
-* Antecedentes de arritmias cardíacas.
-* Uso de marcapasos.
-* Tratamiento con psicofármacos.
-* Trastornos activos de ansiedad o depresión.
+Las condiciones registradas fueron:
 
-### Registro de participantes
-
-| Participante | Basal     | Tarea cognitiva | Recuperación | PSS-10   | NASA-TLX |
-| ------------ | --------- | --------------- | ------------ | -------- | -------- |
-| P01          | Realizado | Realizado       | Realizado    | Aplicado | Aplicado |
-| P02          | Realizado | Realizado       | Realizado    | Aplicado | Aplicado |
-| P03          | Realizado | Realizado       | Realizado    | Aplicado | Aplicado |
-
-
----
-
-## Equipamiento utilizado
-
-La adquisición de señales fisiológicas se realizó utilizando:
-
-* Sistema **BITalino**.
-* Sensor de **ECG de una derivación** (2da Derivada).
-* Electrodos desechables.
-* Software **OpenSignals** para visualización y almacenamiento de datos.
+| Condición en el código | Archivo de entrada | Descripción |
+|---|---|---|
+| `basal` | `Basal_1.txt` | Señal EEG en reposo. |
+| `punto_fijo` | `Abrir_PFijo.txt` | Señal EEG observando un punto fijo. |
+| `parpadeo` | `Parpadeo.txt` | Condición de control para artefacto ocular. |
+| `masticacion` | `Mastic.txt` | Condición de control para artefacto muscular. |
+| `musica_relax` | `Music_Relax.txt` | Señal EEG durante música relajante. |
+| `musica_estres` | `Music_Estres.txt` | Señal EEG durante música estresante. |
 
 ---
 
-## Configuración de electrodos
+## 3. Configuración principal del notebook
 
-Los electrodos fueron colocados siguiendo una configuración de tres derivaciones:
+La configuración usada en el notebook es:
 
-| Electrodo        | Ubicación        |
-| ---------------- | ---------------- |
-| Positivo (+)     | Cresta ilíaca    |
-| Negativo (-)     | Hombro derecho   |
-| Referencia / GND | Hombro izquierdo |
-
-### Imagen
-
-![Esquema de derivaciones ECG](Archivos/configuracion_electrodos.png)
-
----
-
-## Protocolo experimental
-
-El protocolo se desarrolló en una única sesión experimental con registro continuo de ECG durante tres fases consecutivas.
-
-Protocolo:
-
-[Archivo del protocolo de adquisición](Archivos/Protocolo_Adquisicion.pdf)
-
-
-### Resumen del protocolo
-
-| Fase   |                Condición | Duración | Descripción                                                                   |
-| ------ | -----------------------: | -------: | ----------------------------------------------------------------------------- |
-| Fase 1 |             Reposo basal |    5 min | El participante permanece sentado, en silencio y sin movimientos innecesarios |
-| Fase 2 |          Carga cognitiva |    5 min | El participante realiza una tarea cognitiva tipo 2-back                       |
-| Fase 3 | Recuperación fisiológica |    5 min | El participante permanece sentado en reposo pasivo después de la tarea        |
-
-### Diagrama del protocolo
-![Diagrama del protocolo](Archivos/protocolo_experimental_timeline.svg)
+| Parámetro | Valor usado |
+|---|---:|
+| Frecuencia de muestreo | `1000 Hz` |
+| Canales EEG | `Fp1`, `Fp2` |
+| Columnas usadas | Últimas 2 columnas del archivo (`CHANNEL_COLUMNS = [-2, -1]`) |
+| Unidad de entrada | `uV` |
+| Filtro pasa banda | `1–45 Hz` |
+| Notch | No aplicado (`APPLY_NOTCH = False`) |
+| Tamaño de ventana | `4 s` |
+| Solapamiento | `50 %` |
+| Segmento Welch | `2 s` |
+| ICA | Activado para exploración (`RUN_ICA = True`) |
+| Aplicación de ICA | Desactivada por seguridad (`APPLY_ICA = False`) |
 
 ---
 
-## Fase 1: Reposo basal
+## 4. Flujo de procesamiento
 
-Durante la fase basal, el participante permaneció sentado durante 5 minutos en un ambiente silencioso y controlado.
+El flujo general del laboratorio fue:
 
-Indicaciones dadas al participante:
-
-* Evitar movimientos innecesarios.
-* No conversar durante el registro.
-* No utilizar dispositivos electrónicos.
-* Mantener una postura cómoda y estable.
-
-El objetivo de esta fase fue obtener una línea base fisiológica para comparar los cambios producidos durante la tarea cognitiva y durante la recuperación.
-
-
-## Fase 2: Tarea cognitiva 2-back
-
-Durante la segunda fase, el participante realizó una tarea cognitiva tipo **N-back**, específicamente una tarea **2-back**, durante 5 minutos.
-
-En esta tarea, el participante debía identificar si el estímulo actual coincidía con el presentado dos posiciones antes en la secuencia.
-
-Durante toda esta fase se mantuvo el registro continuo de ECG.
-
-Al finalizar la tarea cognitiva, el participante completó el cuestionario **NASA-TLX**, utilizado para evaluar la carga cognitiva percibida durante la actividad.
-
-### Variables asociadas a esta fase
-
-* Señal ECG durante carga cognitiva.
-* Accuracy de la tarea 2-back.
-* Puntaje total NASA-TLX.
-
----
-
-## Fase 3: Recuperación fisiológica
-
-Después de finalizar la tarea cognitiva, el participante permaneció sentado en reposo pasivo durante 5 minutos.
-
-Durante esta fase se continuó registrando ECG con el objetivo de analizar la recuperación autonómica posterior al esfuerzo cognitivo.
-
-Esta etapa permitirá evaluar posteriormente si las métricas de HRV retornan hacia valores cercanos al estado basal.
-
-## Señales Adquiridas
-
-Las señales de cada participante se presentan agrupadas por las tres fases del protocolo: basal, carga cognitiva y recuperación.
-
-### Participante P01
-![ECG Participante 1](Señales/P01_ECG_preview.png)
-
-### Participante P02
-![ECG Participante 2](Señales/P01_ECG_preview.png)
-
-### Participante P03
-![ECG Participante 3](Señales/P01_ECG_preview.png)
+```text
+Archivos .txt de BITalino
+        ↓
+Lectura de datos numéricos
+        ↓
+Selección de 2 canales EEG
+        ↓
+Conversión de unidades a voltios para MNE
+        ↓
+Filtrado pasa banda 1–45 Hz
+        ↓
+Visualización temporal de señales
+        ↓
+Extracción de características por ventanas
+        ↓
+Detección de ventanas con posible artefacto
+        ↓
+Estimación PSD con Welch
+        ↓
+Cálculo de potencia por bandas EEG
+        ↓
+Comparación frente a basal
+        ↓
+Exploración de componentes con ICA
+        ↓
+Exportación de tablas CSV y figuras PNG
+```
 
 ---
 
-## Cuestionarios aplicados
+## 5. Preprocesamiento
 
-### Escala de Estrés Percibido PSS-10
+El preprocesamiento incluyó:
 
-Antes de iniciar la adquisición, cada participante completó la **Escala de Estrés Percibido PSS-10**.
+1. Lectura flexible de archivos `.txt`, ignorando líneas comentadas con `#`.
+2. Selección de los dos canales EEG desde las últimas columnas del archivo.
+3. Conversión de unidades a voltios, formato requerido por MNE.
+4. Creación de objetos `RawArray` de MNE.
+5. Filtrado pasa banda de **1 a 45 Hz**.
+6. Revisión visual inicial mediante gráficas temporales.
 
-Este cuestionario fue aplicado para obtener una medida subjetiva del estrés percibido durante el último mes. El puntaje total podrá ser utilizado posteriormente como variable complementaria en el análisis de la recuperación autonómica.
-
-Enlace de las preguntas del Formulario:
-
-[Formulario aplicado PSS-14](Archivos/PSS-14.pdf)
-
-Enlace del formulario digital:
-
-
-[PSS-10 - Formulario aplicado](https://forms.gle/Yi2TZFLcyzKf48zZ9)
-
+El filtrado se aplicó para conservar las bandas EEG principales y reducir componentes de muy baja frecuencia o ruido de alta frecuencia.
 
 ---
 
-## Variables registradas
+## 6. Visualización temporal de señales
 
-Para cada participante se registraron o se planea registrar las siguientes variables:
+El notebook genera figuras temporales de los primeros segundos de cada condición. Estas gráficas permiten inspeccionar amplitud, forma de onda y presencia de artefactos evidentes.
 
-| Variable                      | Descripción                                                 |
-| ----------------------------- | ----------------------------------------------------------- |
-| ID del participante           | Código anónimo del participante, por ejemplo P01, P02 o P03 |
-| Edad                          | Edad del participante                                       |
-| Sexo                          | Sexo reportado por el participante                          |
-| Puntaje PSS-10                | Estrés percibido antes de la adquisición                    |
-| Señal ECG cruda basasl        | Señal registrada con BITalino/OpenSignals                   |
-| Señal ECG cruda Cognitiva     | Señal registrada con BITalino/OpenSignals                   |
-| Señal ECG cruda Recuperacion  | Señal registrada con BITalino/OpenSignals                   |
-| Intervalos R-R                | Intervalos entre picos R detectados                         |
-| RMSSD basal                   | Métrica HRV durante reposo basal                            |
-| RMSSD durante carga cognitiva | Métrica HRV durante tarea 2-back                            |
-| RMSSD durante recuperación    | Métrica HRV durante reposo posterior                        |
-| Accuracy 2-back               | Desempeño del participante en la tarea cognitiva            |
-| Puntaje NASA-TLX              | Carga cognitiva percibida                                   |
+### Señal basal
+
+![Señal EEG basal](Archivos/time_basal.png)
+
+### Punto fijo
+
+![Señal EEG punto fijo](Archivos/time_punto_fijo.png)
+
+### Parpadeo
+
+![Señal EEG parpadeo](Archivos/time_parpadeo.png)
+
+### Masticación
+
+![Señal EEG masticación](Archivos/time_masticacion.png)
+
+### Música relajante
+
+![Señal EEG música relajante](Archivos/time_musica_relax.png)
+
+### Música estresante
+
+![Señal EEG música estresante](Archivos/time_musica_estres.png)
+
+---
+
+## 7. Artefactos
+
+Las condiciones de **parpadeo** y **masticación** se usaron como condiciones de control para observar artefactos fisiológicos.
+
+| Condición | Tipo de artefacto esperado | Descripción |
+|---|---|---|
+| `parpadeo` | Ocular | Deflexiones de mayor amplitud asociadas al movimiento ocular y parpadeo. |
+| `masticacion` | Muscular | Componentes de mayor frecuencia asociados a actividad muscular facial. |
+
+Para detectar ventanas posiblemente contaminadas, el notebook calcula:
+
+- Amplitud pico a pico (`p2p_uv`).
+- RMS de la señal (`rms_uv`).
+- Potencia por bandas EEG.
+- Potencia en gamma baja como indicador de posible actividad muscular.
+- Umbrales robustos basados en MAD.
+
+Las ventanas marcadas como contaminadas no se usan en el análisis limpio principal.
+
+---
+
+## 8. Tabla de artefactos
+
+El archivo `artifact_report.csv` resume la cantidad de ventanas detectadas como contaminadas por condición y canal.
+
+```text
+Archivos/artifact_report.csv
+```
+
+Este archivo contiene columnas como:
+
+| Columna | Descripción |
+|---|---|
+| `condition` | Condición experimental. |
+| `channel` | Canal EEG analizado. |
+| `n_windows` | Número total de ventanas. |
+| `bad_windows` | Número de ventanas marcadas como contaminadas. |
+| `pct_bad_windows` | Porcentaje de ventanas contaminadas. |
+| `mean_p2p_uv` | Amplitud pico a pico promedio. |
+| `mean_gamma_30_45` | Potencia promedio en gamma baja. |
+
+---
+
+## 9. ICA
+
+Se exploró el uso de **ICA**, análisis de componentes independientes, para identificar posibles componentes asociados a artefactos musculares.
+
+El notebook concatena las señales filtradas de todas las condiciones y ajusta ICA con un máximo de **2 componentes**, debido a que solo existen 2 canales EEG.
+
+```text
+n_components = 2
+method = "fastica"
+```
+
+La remoción automática de componentes no se aplicó por defecto:
+
+```text
+APPLY_ICA = False
+```
+
+Esto se hizo porque, con solo 2 canales, ICA tiene una capacidad limitada para separar fuentes independientes. Por ello, los componentes deben inspeccionarse visualmente antes de decidir si alguno se elimina.
+
+### Score de componente muscular
+
+![Score muscular ICA](Archivos/ica_muscle_scores.png)
+
+### Fuentes ICA por condición
+
+![ICA basal](Archivos/ica_sources_basal.png)
+
+![ICA punto fijo](Archivos/ica_sources_punto_fijo.png)
+
+![ICA parpadeo](Archivos/ica_sources_parpadeo.png)
+
+![ICA masticación](Archivos/ica_sources_masticacion.png)
+
+![ICA música relajante](Archivos/ica_sources_musica_relax.png)
+
+![ICA música estresante](Archivos/ica_sources_musica_estres.png)
+
+> Nota: los archivos `window_features_after_ica.csv`, `summary_bandpowers_after_ica.csv` y las figuras `time_*_after_ica.png` solo se generan si se cambia `APPLY_ICA = True` y se define manualmente `ICA_EXCLUDE_MANUAL`.
+
+---
+
+## 10. Análisis espectral con Welch
+
+Se aplicó el método de **Welch** para estimar la densidad espectral de potencia, PSD, por condición y canal. El análisis se realizó usando ventanas de 4 segundos con 50 % de solapamiento y segmentos de Welch de 2 segundos.
+
+Las bandas analizadas fueron:
+
+| Banda | Rango |
+|---|---:|
+| Theta | 4–8 Hz |
+| Alfa | 8–13 Hz |
+| Beta | 13–30 Hz |
+| Gamma baja | 30–45 Hz |
+
+### PSD promedio del canal Fp1
+
+![PSD Fp1](Archivos/psd_clean_Fp1.png)
+
+### PSD promedio del canal Fp2
+
+![PSD Fp2](Archivos/psd_clean_Fp2.png)
+
+---
+
+## 11. Potencia por bandas EEG
+
+El archivo `summary_bandpowers_clean.csv` resume la potencia promedio por banda EEG, condición y canal, usando únicamente las ventanas consideradas limpias.
+
+```text
+Archivos/summary_bandpowers_clean.csv
+```
+
+Este archivo incluye potencias absolutas y relativas para:
+
+- Theta: `theta_4_8`
+- Alfa: `alpha_8_13`
+- Beta: `beta_13_30`
+- Gamma baja: `gamma_baja_30_45`
+- Potencias relativas: `rel_theta_4_8`, `rel_alpha_8_13`, `rel_beta_13_30`, `rel_gamma_baja_30_45`
+
+### Potencia relativa theta
+
+![Theta Fp1](Archivos/bar_rel_theta_4_8_Fp1.png)
+
+![Theta Fp2](Archivos/bar_rel_theta_4_8_Fp2.png)
+
+### Potencia relativa alfa
+
+![Alfa Fp1](Archivos/bar_rel_alpha_8_13_Fp1.png)
+
+![Alfa Fp2](Archivos/bar_rel_alpha_8_13_Fp2.png)
+
+### Potencia relativa beta
+
+![Beta Fp1](Archivos/bar_rel_beta_13_30_Fp1.png)
+
+![Beta Fp2](Archivos/bar_rel_beta_13_30_Fp2.png)
+
+### Potencia relativa gamma baja
+
+![Gamma baja Fp1](Archivos/bar_rel_gamma_baja_30_45_Fp1.png)
+
+![Gamma baja Fp2](Archivos/bar_rel_gamma_baja_30_45_Fp2.png)
+
+---
+
+## 12. Comparación frente a basal
+
+Se compararon las condiciones principales frente a la condición basal:
+
+- Basal vs punto fijo.
+- Basal vs música relajante.
+- Basal vs música estresante.
+
+El archivo generado fue:
+
+```text
+Archivos/comparison_vs_basal.csv
+```
+
+Este archivo expresa el cambio porcentual de cada banda respecto a basal para cada canal. Las columnas siguen el formato:
+
+```text
+delta_pct_vs_basal_<nombre_de_banda>
+```
+
+Por ejemplo:
+
+```text
+delta_pct_vs_basal_alpha_8_13
+delta_pct_vs_basal_rel_beta_13_30
+```
+
+---
+
+## 13. Archivos generados
+
+### Tablas CSV
+
+| Archivo | Descripción |
+|---|---|
+| `window_features_all_conditions.csv` | Características por ventana para todas las condiciones y canales. |
+| `window_features_with_artifact_flags.csv` | Características por ventana con indicadores de artefacto. |
+| `artifact_report.csv` | Resumen de ventanas contaminadas por condición y canal. |
+| `summary_bandpowers_clean.csv` | Promedio de potencia por bandas usando ventanas limpias. |
+| `comparison_vs_basal.csv` | Comparación porcentual de cada condición frente a basal. |
+| `window_features_after_ica.csv` | Archivo opcional, solo si se activa la limpieza con ICA. |
+| `summary_bandpowers_after_ica.csv` | Archivo opcional, solo si se activa la limpieza con ICA. |
+
+### Figuras PNG
+
+| Tipo de figura | Archivos |
+|---|---|
+| Señales temporales | `time_basal.png`, `time_punto_fijo.png`, `time_parpadeo.png`, `time_masticacion.png`, `time_musica_relax.png`, `time_musica_estres.png` |
+| PSD promedio | `psd_clean_Fp1.png`, `psd_clean_Fp2.png` |
+| ICA | `ica_muscle_scores.png`, `ica_sources_*.png` |
+| Barras por bandas | `bar_rel_theta_4_8_*.png`, `bar_rel_alpha_8_13_*.png`, `bar_rel_beta_13_30_*.png`, `bar_rel_gamma_baja_30_45_*.png` |
+
+---
+
+## 14. Interpretación general
+
+El análisis temporal permitió observar diferencias visuales entre condiciones y detectar segmentos con artefactos evidentes. Las condiciones de parpadeo y masticación sirvieron como referencia para reconocer artefactos oculares y musculares.
+
+El análisis con Welch permitió estimar la potencia espectral en bandas EEG. A partir de estas bandas se compararon condiciones como reposo, punto fijo, música relajante y música estresante. La comparación frente a basal permitió observar aumentos o disminuciones porcentuales en la potencia de cada banda.
+
+ICA se utilizó únicamente como exploración, ya que la señal cuenta solo con 2 canales. Por esta razón, la eliminación de componentes no debe realizarse automáticamente y requiere inspección visual previa.
 
 ---
 
 
-## Referencias
+## 15. Conclusión
 
-* Cohen
-* adasa
+El laboratorio permitió construir un pipeline completo para señales EEG de 2 canales, desde la lectura de archivos de BITalino hasta la extracción de características espectrales. La combinación de revisión visual, detección de artefactos, Welch e ICA exploratorio permitió analizar las diferencias entre condiciones experimentales, manteniendo cuidado metodológico debido a la limitación del bajo número de canales.
