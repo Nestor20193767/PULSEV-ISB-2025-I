@@ -58,7 +58,7 @@ El problema central que aborda el proyecto puede resumirse así: **¿es posible,
 
 ---
 
-## 💡 Propuesta de solución
+## Propuesta de solución
 
 Se desarrolló un sistema de análisis basado en ECG y HRV compuesto por cuatro etapas principales: (A) procesamiento de la señal ECG, (B) extracción de features HRV, (C) cálculo de un *recovery score* y clasificación recuperado/no recuperado, y (D) entrenamiento exploratorio de un modelo MLP, con proyección hacia una futura integración en una aplicación web.
 
