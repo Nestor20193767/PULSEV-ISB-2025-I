@@ -5,25 +5,25 @@
 
 ---
 
-## 📌 Título
+## Título
 
 **Detección de recuperación autonómica post carga cognitiva mediante análisis de HRV en estudiantes universitarios**
 
 ---
 
-## 📝 Resumen
+## Resumen
 
 La regulación autonómica del sistema cardiovascular puede verse afectada temporalmente por tareas que exigen un alto esfuerzo mental. Este proyecto explora si es posible determinar, de manera objetiva y no invasiva, si un estudiante universitario logra recuperar su estado autonómico basal después de realizar una tarea cognitiva demandante. Para ello se adquirieron señales de electrocardiografía (ECG) de tres participantes en tres condiciones experimentales secuenciales —reposo basal, carga cognitiva y recuperación— y se construyó un pipeline computacional en Python que filtra la señal, detecta los complejos QRS, calcula los intervalos RR y segmenta cada registro en ventanas de 30 segundos con paso de 15 segundos. A partir de cada ventana se extrajeron características de variabilidad de la frecuencia cardíaca (HRV) en el dominio temporal (HR_mean, RR_mean, SDNN, RMSSD, pNN50), así como variables relativas al basal individual de cada sujeto. Con estas variables se diseñó un *recovery score*, un índice porcentual que cuantifica cuánto se revirtió el cambio fisiológico inducido por la tarea cognitiva durante la fase de recuperación. Tras un análisis de sensibilidad de umbral, se fijó un criterio exploratorio de 60 % para etiquetar cada ventana como "recuperado" o "no_recuperado". Debido al tamaño reducido de la muestra, se generaron datos sintéticos únicamente en el espacio de características (bootstrap con ruido gaussiano controlado), preservando intactos los datos reales. Con este dataset aumentado se entrenó una red neuronal MLP pequeña, validada mediante *leave-one-subject-out*, que obtuvo un accuracy promedio de 0.49 y un F1 macro de 0.41. Estos resultados evidencian que el modelo aún no generaliza de forma estable entre participantes, por lo que el sistema se presenta como un estudio piloto exploratorio: el resultado principal es el recovery_score fisiológico, mientras que la predicción de la MLP se ofrece como apoyo complementario, y el cuestionario de estrés percibido (PSS-10/PSS-14) se integra únicamente como variable contextual y no como entrada del modelo.
 
 ---
 
-## 🔑 Palabras clave
+## Palabras clave
 
 `Variabilidad de la frecuencia cardíaca (HRV)` · `Electrocardiografía (ECG)` · `Carga cognitiva` · `Sistema nervioso autónomo` · `RMSSD` · `Recovery score` · `Aprendizaje automático` · `Estudio piloto`
 
 ---
 
-## 📖 Introducción
+## Introducción
 
 La carga cognitiva se define como el esfuerzo mental requerido para ejecutar tareas que demandan memoria de trabajo, razonamiento o atención sostenida. En poblaciones universitarias, la exposición reiterada a exigencias académicas y estrés puede alterar la regulación del sistema nervioso autónomo (SNA), afectando la capacidad del organismo para retornar a un estado fisiológico basal tras un esfuerzo mental [1]. Evaluar esta capacidad de recuperación es relevante tanto desde una perspectiva de salud (identificar patrones de estrés sostenido) como desde una perspectiva de ingeniería biomédica (diseñar sistemas de monitoreo no invasivo del bienestar autonómico).
 
@@ -44,7 +44,7 @@ Diseñar e implementar un sistema de procesamiento de señales ECG y análisis d
 
 ---
 
-## ❓ Planteamiento del problema
+## Planteamiento del problema
 
 Actualmente existe una dificultad concreta para evaluar de manera **objetiva** si un estudiante logra recuperar su estado autonómico basal después de una tarea cognitiva: la evaluación de la carga cognitiva se basa principalmente en métodos subjetivos [5], [6], y los estudios de HRV disponibles se han enfocado mayormente en la respuesta autonómica *durante* la tarea cognitiva, más que en el proceso de recuperación posterior [7]. La HRV ofrece una vía fisiológica no invasiva para abordar esta pregunta, pero su interpretación requiere de un pipeline de procesamiento de señal robusto y de criterios claros para traducir los cambios en las métricas HRV en una etiqueta interpretable (recuperado / no recuperado).
 
@@ -133,7 +133,7 @@ Se plantea una aplicación web como herramienta de testeo e interpretación, con
 
 ---
 
-## 📊 Resultados
+## Resultados
 
 **Adquisición y ventanas.** Se procesaron señales ECG de tres participantes en las tres condiciones experimentales, obteniéndose aproximadamente **55 ventanas reales** en la fase de recuperación tras la segmentación (ventanas de 30 s, paso de 15 s).
 
@@ -166,7 +166,7 @@ Por estas razones, los resultados del sistema se interpretan en un orden jerárq
 
 ---
 
-## ✅ Conclusiones
+## Conclusiones
 
 - Se logró implementar un pipeline completo y funcional de extremo a extremo —desde la señal ECG cruda hasta un índice interpretable de recuperación autonómica— a pesar de contar con una muestra piloto de solo tres participantes.
 - El *recovery_score*, construido a partir de la comparación de features HRV de cada ventana de recuperación contra los promedios basal y cognitivo individuales, resultó ser una métrica más coherente con la pregunta de investigación que una clasificación directa basal/cognitivo/recuperación, ya que responde explícitamente si el participante recuperó o no su estado autonómico.
@@ -178,7 +178,7 @@ Por estas razones, los resultados del sistema se interpretan en un orden jerárq
 
 ---
 
-## 📚 Referencias
+## Referencias
 
 [1] G. Laborie et al., "Mental workload alters heart rate variability, lowering non-linear dynamics," *Frontiers in Physiology*, 2019. PMC6528181.
 
@@ -206,20 +206,27 @@ Por estas razones, los resultados del sistema se interpretan en un orden jerárq
 
 ---
 
-## 👥 Biografías de autores
+## Biografías de autores
 
-### [Nombre completo del autor 1]
+### Néstor Allende
 [Breve biografía: carrera, ciclo/semestre, universidad, intereses académicos relacionados con señales biomédicas o ciencia de datos, correo o contacto opcional.]
 
-### [Nombre completo del autor 2]
-[Breve biografía similar]
+### Ana Angulo
+[Breve biografía: carrera, ciclo/semestre, universidad, intereses académicos relacionados con señales biomédicas o ciencia de datos, correo o contacto opcional.]
 
-### [Nombre completo del autor 3] *(si aplica)*
-[Breve biografía similar]
+### Luis Loayza
+[Breve biografía: carrera, ciclo/semestre, universidad, intereses académicos relacionados con señales biomédicas o ciencia de datos, correo o contacto opcional.]
+
+### Natalie Sante
+[Breve biografía: carrera, ciclo/semestre, universidad, intereses académicos relacionados con señales biomédicas o ciencia de datos, correo o contacto opcional.]
+
+### Nataly Deledesma
+[Breve biografía: carrera, ciclo/semestre, universidad, intereses académicos relacionados con señales biomédicas o ciencia de datos, correo o contacto opcional.]
+
 
 ---
 
-## 📂 Estructura del repositorio
+## Estructura del repositorio
 
 ```
 PULSEV-ISB-2026-I/
