@@ -224,20 +224,3 @@ Por estas razones, los resultados del sistema se interpretan en un orden jerárq
 [Breve biografía: carrera, ciclo/semestre, universidad, intereses académicos relacionados con señales biomédicas o ciencia de datos, correo o contacto opcional.]
 
 
----
-
-## Estructura del repositorio
-
-```
-PULSEV-ISB-2026-I/
-├── README.md                          # Este informe final
-├── data_raw/                          # Señales ECG crudas por participante y estado
-├── metadata/
-│   └── pss_scores.csv                 # Puntajes PSS-10/PSS-14 por participante
-├── src/ o notebooks/                  # Pipeline de procesamiento (Python)
-├── outputs/
-│   └── 05_dataset_edge_impulse_recuperacion.csv
-└── app/                                # Aplicación web (en desarrollo)
-```
-
-*(Ajusta esta estructura si el repositorio real está organizado de otra forma.)*
