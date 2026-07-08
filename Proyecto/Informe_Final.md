@@ -1,7 +1,8 @@
-# PULSEV — Informe Final del Proyecto
+# PULSEV — Informe Final del Proyecto  
 ### Curso: Introducción a Señales Biomédicas (ISB 2026-I)
 
-> **Repositorio:** [PULSEV-ISB-2026-I](https://github.com/Nestor20193767/PULSEV-ISB-2026-I)
+> **Repositorio:** [PULSEV-ISB-2026-I](https://github.com/Nestor20193767/PULSEV-ISB-2026-I)  
+> **Estado:** Informe final corregido con detección robusta de picos R, procesamiento local, modelo MLP exploratorio y exportación a Edge Impulse.
 
 ---
 
@@ -13,214 +14,569 @@
 
 ## Resumen
 
-La regulación autonómica del sistema cardiovascular puede verse afectada temporalmente por tareas que exigen un alto esfuerzo mental. Este proyecto explora si es posible determinar, de manera objetiva y no invasiva, si un estudiante universitario logra recuperar su estado autonómico basal después de realizar una tarea cognitiva demandante. Para ello se adquirieron señales de electrocardiografía (ECG) de tres participantes en tres condiciones experimentales secuenciales —reposo basal, carga cognitiva y recuperación— y se construyó un pipeline computacional en Python que filtra la señal, detecta los complejos QRS, calcula los intervalos RR y segmenta cada registro en ventanas de 30 segundos con paso de 15 segundos. A partir de cada ventana se extrajeron características de variabilidad de la frecuencia cardíaca (HRV) en el dominio temporal (HR_mean, RR_mean, SDNN, RMSSD, pNN50), así como variables relativas al basal individual de cada sujeto. Con estas variables se diseñó un *recovery score*, un índice porcentual que cuantifica cuánto se revirtió el cambio fisiológico inducido por la tarea cognitiva durante la fase de recuperación. Tras un análisis de sensibilidad de umbral, se fijó un criterio exploratorio de 60 % para etiquetar cada ventana como "recuperado" o "no_recuperado". Debido al tamaño reducido de la muestra, se generaron datos sintéticos únicamente en el espacio de características (bootstrap con ruido gaussiano controlado), preservando intactos los datos reales. Con este dataset aumentado se entrenó una red neuronal MLP pequeña, validada mediante *leave-one-subject-out*, que obtuvo un accuracy promedio de 0.49 y un F1 macro de 0.41. Estos resultados evidencian que el modelo aún no generaliza de forma estable entre participantes, por lo que el sistema se presenta como un estudio piloto exploratorio: el resultado principal es el recovery_score fisiológico, mientras que la predicción de la MLP se ofrece como apoyo complementario, y el cuestionario de estrés percibido (PSS-10/PSS-14) se integra únicamente como variable contextual y no como entrada del modelo.
+La variabilidad de la frecuencia cardíaca (HRV, *Heart Rate Variability*) permite estimar de manera no invasiva la regulación del sistema nervioso autónomo a partir de los intervalos RR derivados de una señal ECG. En este proyecto se desarrolló un pipeline computacional para evaluar si un estudiante universitario recupera su estado autonómico basal después de una tarea cognitiva demandante. Para ello, se adquirieron señales ECG de tres participantes en tres condiciones secuenciales: reposo basal, carga cognitiva y recuperación. Las señales fueron procesadas en Python mediante filtrado pasa banda, detección robusta de picos R, segmentación en ventanas de 30 s con paso de 15 s y extracción de métricas HRV en el dominio temporal.
+
+Durante el control de calidad se identificó que la detección inicial de picos R podía marcar picos secundarios en algunas señales, probablemente por la morfología bifásica o la polaridad del ECG. Por ello, se corrigió el algoritmo de detección utilizando la envolvente absoluta del complejo QRS, una distancia mínima fisiológica entre latidos y un refinamiento local por máximo absoluto. Luego de esta corrección, no se detectaron ventanas sospechosas en el control de calidad numérico.
+
+A partir de las features HRV se calculó un **recovery score**, definido como un índice porcentual que compara el retorno de las métricas de recuperación hacia el basal individual de cada participante, tomando como referencia el cambio inducido durante la carga cognitiva. Con un umbral exploratorio de 60 %, las 55 ventanas reales de recuperación se distribuyeron en 33 ventanas recuperadas y 22 no recuperadas. Debido al tamaño reducido de la muestra, se generaron datos sintéticos únicamente en el espacio de características, no sobre la señal ECG cruda. El dataset aumentado alcanzó 220 muestras: 132 recuperadas y 88 no recuperadas.
+
+Se entrenó una red neuronal MLP local sobre 15 features HRV y variables relativas al basal. La validación principal se realizó mediante *leave-one-subject-out* (LOSO), obteniendo un accuracy promedio de 0.528 y un F1 macro promedio de 0.412. Estos resultados evidencian una generalización limitada entre participantes, coherente con el carácter piloto del estudio y el tamaño muestral reducido (n = 3). Además, el dataset fue exportado a Edge Impulse para demostrar la viabilidad de implementación del modelo en una plataforma de aprendizaje automático embebido. En consecuencia, el resultado principal del sistema es el **recovery score fisiológico**, mientras que la predicción MLP se interpreta como apoyo exploratorio. El cuestionario PSS-10/PSS-14 se integra únicamente como contexto de estrés percibido y no como entrada del modelo.
 
 ---
 
 ## Palabras clave
 
-`Variabilidad de la frecuencia cardíaca (HRV)` · `Electrocardiografía (ECG)` · `Carga cognitiva` · `Sistema nervioso autónomo` · `RMSSD` · `Recovery score` · `Aprendizaje automático` · `Estudio piloto`
+`ECG` · `HRV` · `picos R` · `intervalos RR` · `carga cognitiva` · `recuperación autonómica` · `RMSSD` · `SDNN` · `PSS` · `MLP` · `Edge Impulse`
 
 ---
 
 ## Introducción
 
-La carga cognitiva se define como el esfuerzo mental requerido para ejecutar tareas que demandan memoria de trabajo, razonamiento o atención sostenida. En poblaciones universitarias, la exposición reiterada a exigencias académicas y estrés puede alterar la regulación del sistema nervioso autónomo (SNA), afectando la capacidad del organismo para retornar a un estado fisiológico basal tras un esfuerzo mental [1]. Evaluar esta capacidad de recuperación es relevante tanto desde una perspectiva de salud (identificar patrones de estrés sostenido) como desde una perspectiva de ingeniería biomédica (diseñar sistemas de monitoreo no invasivo del bienestar autonómico).
+La carga cognitiva se relaciona con el esfuerzo mental requerido para ejecutar tareas de memoria de trabajo, atención sostenida o toma de decisiones. En estudiantes universitarios, este tipo de demanda puede generar cambios transitorios en la actividad autonómica, reflejados en el aumento de la frecuencia cardíaca y en la reducción de algunas métricas de HRV. La HRV es ampliamente utilizada como indicador indirecto del equilibrio entre la actividad simpática y parasimpática del sistema nervioso autónomo, y ha sido propuesta como una herramienta útil para estudiar estrés, recuperación fisiológica y carga mental [1]–[4].
 
-La variabilidad de la frecuencia cardíaca (HRV, por sus siglas en inglés) es una herramienta ampliamente utilizada para estimar de forma indirecta la actividad del SNA a partir de los intervalos RR derivados de la señal ECG y funciona como un indicador directo de la adaptabilidad del organismo al estrés. En términos generales, una mayor HRV se asocia con una mejor flexibilidad autonómica y predominio parasimpático; cuando el estrés aumenta, la HRV disminuye (reflejado en métricas como RMSSD o SDNN), y cuando el cuerpo se recupera, debería volver a subir [2]–[4].
+En este contexto, una pregunta relevante no es únicamente si la carga cognitiva modifica la señal fisiológica durante la tarea, sino si el organismo logra retornar hacia su estado basal al finalizarla. Esta capacidad de recuperación puede interpretarse como un indicador de adaptabilidad autonómica. Por ello, este proyecto no se centra en clasificar las fases basal, cognitiva y recuperación, sino en estimar si la fase de recuperación evidencia un retorno fisiológico suficiente hacia el basal individual.
 
-Este proyecto propone un pipeline computacional capaz de procesar señales ECG adquiridas en tres condiciones —basal, carga cognitiva y recuperación—, extraer características HRV, y a partir de ellas estimar un índice de recuperación autonómica. Dado que el estudio se desarrolla con una muestra reducida de tres participantes, se plantea explícitamente como un **estudio piloto y exploratorio**, orientado a validar la viabilidad metodológica del pipeline antes que a generar conclusiones clínicas generalizables.
+La solución propuesta consiste en procesar señales ECG adquiridas con BITalino, detectar los picos R, calcular intervalos RR y extraer métricas HRV por ventanas. A partir de estas métricas se construye un **recovery score**, que permite clasificar cada ventana de recuperación como `recuperado` o `no_recuperado`. Adicionalmente, se entrena una red neuronal MLP como clasificador exploratorio, y se exporta el dataset a Edge Impulse para evaluar su posible implementación en sistemas de aprendizaje automático en el borde (*edge AI*).
 
-**Objetivo general**
-
-Diseñar e implementar un sistema de procesamiento de señales ECG y análisis de HRV que permita estimar si un estudiante universitario presenta una recuperación autonómica adecuada tras una tarea de carga cognitiva.
-
-**Objetivos específicos**
-
-- Adquirir y procesar señales ECG en tres condiciones experimentales (basal, carga cognitiva y recuperación) mediante filtrado, detección de picos R y cálculo de intervalos RR.
-- Extraer características HRV en el dominio temporal por ventana de análisis y calcular variables relativas al estado basal individual de cada participante.
-- Diseñar un índice cuantitativo (*recovery score*) que permita clasificar la recuperación autonómica como adecuada o no adecuada.
-- Explorar la viabilidad de un modelo de clasificación supervisado (MLP) como apoyo a la interpretación fisiológica, evaluando su desempeño mediante validación *leave-one-subject-out*.
+Dado que el estudio cuenta con solo tres participantes, sus resultados deben interpretarse como una **prueba de concepto metodológica**, no como una herramienta clínica validada. El objetivo principal es demostrar un flujo reproducible de procesamiento ECG-HRV y una forma interpretable de cuantificar recuperación autonómica post carga cognitiva.
 
 ---
 
 ## Planteamiento del problema
 
-Actualmente existe una dificultad concreta para evaluar de manera **objetiva** si un estudiante logra recuperar su estado autonómico basal después de una tarea cognitiva: la evaluación de la carga cognitiva se basa principalmente en métodos subjetivos [5], [6], y los estudios de HRV disponibles se han enfocado mayormente en la respuesta autonómica *durante* la tarea cognitiva, más que en el proceso de recuperación posterior [7]. La HRV ofrece una vía fisiológica no invasiva para abordar esta pregunta, pero su interpretación requiere de un pipeline de procesamiento de señal robusto y de criterios claros para traducir los cambios en las métricas HRV en una etiqueta interpretable (recuperado / no recuperado).
+La evaluación del estrés académico y de la carga cognitiva suele apoyarse en cuestionarios subjetivos. Aunque estos instrumentos son útiles, no permiten observar directamente la respuesta fisiológica del sistema nervioso autónomo. Por otro lado, la señal ECG ofrece una vía objetiva y no invasiva para analizar la actividad cardiovascular y derivar métricas HRV asociadas al estrés y a la recuperación fisiológica [2], [3].
 
-A este vacío metodológico se suma un vacío científico más amplio: existe poca investigación centrada específicamente en la recuperación autonómica post carga cognitiva mediante HRV [7], [8], son escasos los estudios que aborden la recuperación fisiológica y el estrés académico en poblaciones de estudiantes universitarios [8]–[10], y no se dispone de algoritmos simples y accesibles para detectar recuperación autonómica a partir de ECG y HRV. Esta carencia dificulta la detección temprana de fatiga mental y sobrecarga cognitiva, con un posible impacto en el rendimiento académico y el estrés estudiantil [6], [8].
+El problema abordado en este proyecto es el siguiente:
 
-A esta dificultad conceptual se suma una limitación práctica relevante: por restricciones de tiempo de adquisición, el estudio cuenta únicamente con registros ECG de **tres participantes**, cada uno con tres segmentos (basal, cognitivo y recuperación) de aproximadamente 5 minutos de duración —con la excepción de un participante cuyo registro fue más corto por condiciones reales de adquisición—. Este tamaño muestral impide, por diseño, alcanzar significancia estadística o generalización clínica, y obliga a plantear el proyecto como una prueba de concepto metodológica.
+> **¿Es posible estimar, a partir de señales ECG y métricas HRV, si un estudiante universitario recupera su estado autonómico basal después de una tarea cognitiva demandante?**
 
-Antes de la adquisición fisiológica, cada participante completó una encuesta de estrés percibido (PSS-10 o PSS-14, según la versión aplicada). Esta encuesta no se utiliza como entrada de ningún modelo computacional, sino como variable contextual que permite enriquecer la interpretación de los resultados fisiológicos.
+Este problema presenta tres dificultades principales:
 
-El problema central que aborda el proyecto puede resumirse así: **¿es posible, a partir de un pipeline de procesamiento de ECG y extracción de features HRV, estimar de forma objetiva si un estudiante universitario recupera su estado autonómico tras una tarea cognitiva, incluso con una muestra piloto reducida?**
+1. **Procesamiento de señal:** la detección de picos R debe ser confiable, ya que errores en los picos alteran los intervalos RR y, por tanto, todas las features HRV.
+2. **Interpretación fisiológica:** las métricas HRV varían entre personas; por ello, no basta comparar valores absolutos entre participantes.
+3. **Tamaño muestral reducido:** el estudio solo cuenta con tres participantes, lo que impide una validación estadística robusta y obliga a interpretar el modelo como exploratorio.
+
+Por estas razones, se optó por una solución basada en comparación intra-sujeto: cada participante se evalúa respecto a su propio basal. Además, el puntaje PSS se utiliza únicamente como contexto subjetivo del estrés percibido, sin incorporarse como entrada del modelo.
 
 ---
 
 ## Propuesta de solución
 
-Se desarrolló un sistema de análisis basado en ECG y HRV compuesto por cuatro etapas principales: (A) procesamiento de la señal ECG, (B) extracción de features HRV, (C) cálculo de un *recovery score* y clasificación recuperado/no recuperado, y (D) entrenamiento exploratorio de un modelo MLP, con proyección hacia una futura integración en una aplicación web.
+La solución implementada se organiza en siete etapas principales.
+
+---
 
 ### 1. Adquisición de datos
 
-Se adquirieron señales ECG de tres participantes (P01, P02, P03) durante tres condiciones experimentales secuenciales: **basal** (reposo), **cognitivo** (durante la tarea) y **recuperación** (posterior a la tarea). La señal se registró con un sistema BITalino y electrodos ECG desechables en configuración de tres derivaciones (hombro derecho, hombro izquierdo y cresta ilíaca), usando el software OpenSignals; el front-end de adquisición se basa en el chip AD8232 [11]. Antes del protocolo, cada participante completó el cuestionario PSS-10 como línea base de estrés percibido, y al finalizar la tarea cognitiva se aplicó el cuestionario NASA-TLX para confirmar que la tarea fue percibida como demandante. Cada señal cruda se almacenó por participante y por estado en archivos `.txt`/`.csv`, organizados de la siguiente forma:
+Se adquirieron señales ECG de tres participantes: `P01`, `P02` y `P03`. Cada participante fue evaluado en tres estados:
 
-```
+- **Basal:** reposo previo a la tarea.
+- **Cognitivo:** ejecución de tarea cognitiva demandante.
+- **Recuperación:** periodo posterior a la tarea cognitiva.
+
+La señal ECG fue registrada con BITalino y OpenSignals, con una frecuencia de muestreo de 1000 Hz. Los archivos se organizaron en una estructura por participante y por estado.
+
+```text
 Proyecto_HRV/
 ├── data_raw/
-│   ├── P01/ { basal.txt, cognitivo.txt, recuperacion.txt }
-│   ├── P02/ { basal.txt, cognitivo.txt, recuperacion.txt }
-│   └── P03/ { basal.txt, cognitivo.txt, recuperacion.txt }
-├── metadata/
-│   └── pss_scores.csv
-└── outputs/
+│   ├── P01/
+│   │   ├── P01_basal_ECGv2.txt
+│   │   ├── P01_cognitiva_ECGv2.txt
+│   │   └── P01_recuperacion_ECGv2.txt
+│   ├── P02/
+│   │   ├── P02_basal_ECGv2.h5.txt
+│   │   ├── P02_cognitiva_ECGv2.h5.txt
+│   │   └── P02_recuperacion_ECGv2.txt.txt
+│   └── P03/
+│       ├── P03_basal_ECGv2.txt
+│       ├── P03_cognitiva_ECGv2.txt
+│       └── P03_recuperacion_ECGv2.txt
+├── outputs/
+├── models/
+└── app.py
 ```
+
+**Imagen sugerida**
+
+```markdown
+![Organización de archivos del proyecto](figures/estructura_directorios.png)
+```
+
+> Insertar una captura del explorador de archivos o del repositorio mostrando `data_raw/`, `outputs/`, `models/` y `app.py`.
+
+---
 
 ### 2. Preprocesamiento ECG
 
-Las señales crudas se procesan en Python mediante un pipeline propio: lectura flexible de archivos `.txt`/`.csv`, filtrado pasa banda orientado a resaltar el complejo QRS, detección de picos R y cálculo de los intervalos RR. El pipeline incorpora control de calidad visual y numérico: gráficas de la señal filtrada con picos R marcados, resumen de duración por archivo, número de ventanas válidas por participante/estado, estimación global de frecuencia cardíaca y marcado de ventanas sospechosas por valores extremos de HR o bajo número de intervalos NN.
+El preprocesamiento incluyó:
+
+1. Lectura flexible de archivos `.txt`, `.csv` o `.tsv`.
+2. Selección de la columna ECG.
+3. Filtrado pasa banda de 5–20 Hz para resaltar el complejo QRS.
+4. Normalización tipo z-score.
+5. Detección robusta de picos R.
+6. Cálculo de intervalos RR.
+7. Control de calidad visual y numérico.
+
+Durante la revisión visual se observó que una detección basada solo en picos positivos/negativos podía seleccionar picos secundarios cercanos al QRS. Para corregirlo, se actualizó el algoritmo de detección:
+
+- Se calculó la envolvente absoluta del ECG filtrado.
+- Se suavizó la envolvente en una ventana corta.
+- Se aplicó una distancia mínima entre latidos de 0.45 s.
+- Se refinó cada detección buscando el máximo absoluto local en ±80 ms.
+- La polaridad se ajustó solo para visualización.
+
+Este ajuste permitió reducir falsas detecciones y estabilizar las métricas HRV.
+
+**Imagen sugerida**
+
+```markdown
+![Control de calidad de picos R](outputs/qc_picos_R/QC_P01_recuperacion_picosR.png)
+```
+
+> Insertar una imagen de la carpeta `outputs/qc_picos_R/`, idealmente `QC_P01_recuperacion_picosR.png` o una donde se observe claramente un punto por cada complejo QRS.
+
+---
 
 ### 3. Segmentación por ventanas
 
-Para incrementar el número de observaciones sin introducir participantes ficticios, cada registro se segmenta en ventanas temporales de **30 segundos con paso de 15 segundos** (50 % de solapamiento). Cada ventana es un segmento derivado de una señal real, no un sujeto adicional.
+Las señales se dividieron en ventanas temporales de:
+
+- **Tamaño de ventana:** 30 s
+- **Paso:** 15 s
+- **Solapamiento:** 50 %
+
+Esta estrategia permitió aumentar el número de observaciones sin crear nuevos sujetos artificiales. Cada ventana sigue correspondiendo a una porción real de la señal ECG adquirida.
+
+---
 
 ### 4. Extracción de features HRV
 
-Por cada ventana se calculan características de HRV en el dominio temporal: `HR_mean`, `HR_min`, `HR_max`, `RR_mean`, `RR_median`, `SDNN`, `RMSSD`, `pNN50` y `NN_count`. También se exploraron features estadísticos de la señal ECG filtrada (RMS, energía, desviación estándar, skewness, kurtosis), aunque el modelo final prioriza los features HRV por su relación directa y establecida con la regulación autonómica.
+Por cada ventana se calcularon features HRV en el dominio temporal:
 
-### 5. Features relativos al basal
+| Feature | Descripción |
+|---|---|
+| `HR_mean` | Frecuencia cardíaca media de la ventana |
+| `RR_mean` | Promedio de intervalos RR |
+| `SDNN` | Desviación estándar de intervalos NN |
+| `RMSSD` | Raíz media cuadrática de diferencias sucesivas RR |
+| `pNN50` | Porcentaje de diferencias RR sucesivas mayores a 50 ms |
+| `NN_count` | Cantidad de intervalos NN válidos |
 
-Dado que cada participante tiene un nivel fisiológico basal distinto, se calcularon variables *delta* y *ratio* respecto al basal individual (por ejemplo, `RMSSD_delta_basal`, `RMSSD_ratio_basal`, y equivalentes para HR_mean, RR_mean, SDNN y pNN50). Estas variables permiten evaluar cuánto se aleja o aproxima cada ventana al estado basal propio del sujeto, en lugar de comparar valores absolutos entre participantes distintos.
+También se calcularon estadísticas de la señal ECG filtrada, como RMS, energía, desviación estándar, skewness y kurtosis. Sin embargo, para el modelo final se priorizaron las features HRV y sus variables relativas al basal, debido a su interpretación fisiológica directa.
+
+---
+
+### 5. Features relativas al basal
+
+Para evitar comparaciones directas entre sujetos con basales distintos, se calcularon variables relativas al basal individual:
+
+- `HR_mean_delta_basal`
+- `RR_mean_delta_basal`
+- `SDNN_delta_basal`
+- `RMSSD_delta_basal`
+- `pNN50_delta_basal`
+- `HR_mean_ratio_basal`
+- `RR_mean_ratio_basal`
+- `SDNN_ratio_basal`
+- `RMSSD_ratio_basal`
+- `pNN50_ratio_basal`
+
+Estas variables permiten analizar si una ventana se acerca o se aleja del estado basal propio de cada participante.
+
+---
 
 ### 6. Recovery score
 
-En lugar de clasificar cada ventana como basal/cognitivo/recuperación, el enfoque final consiste en estimar si el participante presenta una **recuperación autonómica adecuada**. El *recovery score* se calcula comparando, para cada ventana de recuperación, el grado en que las métricas HRV retornan hacia el promedio basal del propio participante, tomando como referencia el cambio observado entre el estado basal y el estado cognitivo.
+El **recovery score** fue diseñado como la salida principal del sistema. Para cada ventana de recuperación, se estimó el porcentaje de retorno hacia el basal usando como referencia el cambio entre el estado basal y el estado cognitivo.
 
-- Para variables que disminuyen durante la carga cognitiva y deberían aumentar durante la recuperación (RMSSD, SDNN, RR_mean, pNN50), se aplica una lógica de recuperación por incremento hacia el basal.
-- Para HR_mean, que aumenta durante la carga cognitiva y debería disminuir durante la recuperación, se aplica la lógica inversa.
+Para features que deberían aumentar durante la recuperación, como `RMSSD`, `SDNN`, `RR_mean` y `pNN50`, se usó:
 
-El score combina principalmente `RMSSD_recovery_pct` (40 %), `HR_recovery_pct` (25 %), `SDNN_recovery_pct` (20 %) y `RR_recovery_pct` (15 %), ponderaciones definidas de forma exploratoria dado el rol central de RMSSD como indicador de modulación vagal. El resultado se interpreta como un porcentaje aproximado de recuperación autonómica.
+```text
+recuperación (%) = (valor_recuperación - valor_cognitivo) / (valor_basal - valor_cognitivo) × 100
+```
 
-### 7. Etiqueta recuperado / no recuperado
+Para `HR_mean`, que normalmente debería disminuir al recuperarse, se usó la relación inversa:
 
-Se realizó un análisis de sensibilidad probando umbrales de 40 %, 50 %, 60 %, 70 % y 80 %. Un umbral inicial de 70 % generó una distribución de clases muy desbalanceada. El umbral de **60 %** ofreció el mejor equilibrio entre exigencia fisiológica y balance de clases, por lo que se adoptó como criterio exploratorio del estudio piloto (no como criterio clínico universal):
+```text
+recuperación HR (%) = (valor_cognitivo - valor_recuperación) / (valor_cognitivo - valor_basal) × 100
+```
 
-- `recovery_score ≥ 60 %` → recuperado
-- `recovery_score < 60 %` → no_recuperado
+El score final combinó las métricas con ponderaciones exploratorias:
+
+| Métrica | Peso |
+|---|---:|
+| `RMSSD_recovery_pct` | 0.40 |
+| `HR_recovery_pct` | 0.25 |
+| `SDNN_recovery_pct` | 0.20 |
+| `RR_recovery_pct` | 0.15 |
+
+Se eligió un umbral exploratorio de 60 %:
+
+```text
+recovery_score ≥ 60 %  → recuperado
+recovery_score < 60 %   → no_recuperado
+```
+
+Este umbral no representa un criterio clínico universal; fue seleccionado para este estudio piloto por su balance entre interpretación fisiológica y distribución de clases.
+
+---
+
+### 7. Modelo MLP local
+
+Se entrenó una red neuronal MLP local usando `scikit-learn`. El modelo recibió 15 variables de entrada:
+
+```text
+HR_mean
+RR_mean
+SDNN
+RMSSD
+pNN50
+HR_mean_delta_basal
+RR_mean_delta_basal
+SDNN_delta_basal
+RMSSD_delta_basal
+pNN50_delta_basal
+HR_mean_ratio_basal
+RR_mean_ratio_basal
+SDNN_ratio_basal
+RMSSD_ratio_basal
+pNN50_ratio_basal
+```
+
+No se incluyó `recovery_score` como entrada para evitar *data leakage*, ya que esa variable se usa para definir la etiqueta. Tampoco se incluyó el puntaje PSS, porque se utiliza solo como contexto subjetivo.
+
+La arquitectura local fue:
+
+```text
+SimpleImputer
+↓
+StandardScaler
+↓
+MLPClassifier
+```
+
+El modelo final fue guardado como:
+
+```text
+models/07_modelo_local_MLP_recuperacion.joblib
+```
+
+---
 
 ### 8. Aumento de datos sintéticos
 
-Debido a que el estudio cuenta con solo tres participantes, se aplicó aumento de datos **únicamente en el espacio de características HRV**, no sobre la señal ECG cruda, ya que generar ECG sintético realista requeriría validar morfología de ondas P, complejos QRS, ondas T y patrones de ruido fisiológico, lo cual excede el alcance y el tiempo disponible del proyecto. La generación sintética se realizó mediante bootstrap de ventanas reales, adición de ruido gaussiano controlado por clase y limitación de los valores generados a rangos fisiológicamente plausibles. Los datos sintéticos se emplearon exclusivamente para entrenamiento; los datos reales permanecieron intactos, sin recorte (*clipping*).
+Debido al número reducido de participantes, se generaron datos sintéticos únicamente en el espacio de features HRV. No se generaron señales ECG sintéticas.
 
-### 9. Modelo de clasificación (MLP)
+La generación sintética se realizó mediante:
 
-Se optó por una red neuronal MLP de arquitectura pequeña, adecuada para el carácter tabular del dataset final (features HRV, no señales crudas). La entrada incluye HR_mean, RR_mean, SDNN, RMSSD, pNN50 y sus variables delta/ratio respecto al basal. Deliberadamente **no se incluyó** `recovery_score` como feature de entrada, ya que fue la variable utilizada para construir la etiqueta y su inclusión generaría fuga de información (*data leakage*); tampoco se incluyó el puntaje PSS, dado que con solo tres participantes el modelo podría aprender diferencias individuales en lugar de patrones fisiológicos generalizables.
+- bootstrap de ventanas reales,
+- ruido gaussiano controlado,
+- preservación de la etiqueta,
+- clipping solo en datos sintéticos para evitar valores no plausibles.
 
-Arquitectura: capa densa de 32 neuronas (ReLU) → *batch normalization* → *dropout* → capa densa de 16 neuronas (ReLU) → *dropout* → capa de salida *softmax* con dos clases (recuperado / no_recuperado).
+Esto permitió aumentar el volumen de entrenamiento sin alterar los datos reales.
 
-### 10. Validación
+---
 
-La validación se realizó mediante **leave-one-subject-out** (LOSO): en cada fold se entrena con dos participantes y se prueba con el tercero (P01 vs. P02+P03; P02 vs. P01+P03; P03 vs. P01+P02). Los datos sintéticos se generaron únicamente a partir de los participantes de entrenamiento en cada fold, nunca del participante de prueba, evitando fuga de información y ofreciendo una evaluación más conservadora que un split aleatorio de ventanas.
+### 9. Validación local
 
-### 11. Exportación a Edge Impulse
+La validación principal se realizó con **leave-one-subject-out** (LOSO):
 
-El dataset final se exportó en formato CSV (`05_dataset_edge_impulse_recuperacion.csv`) con los features HRV seleccionados y la etiqueta recuperado/no_recuperado, para su uso como plataforma de entrenamiento e implementación del modelo MLP. La validación local LOSO se considera más conservadora que la validación aleatoria interna de Edge Impulse, ya que evita mezclar ventanas del mismo participante entre entrenamiento y prueba.
+```text
+Fold 1: prueba con P01, entrenamiento con P02 + P03
+Fold 2: prueba con P02, entrenamiento con P01 + P03
+Fold 3: prueba con P03, entrenamiento con P01 + P02
+```
 
-### 12. Aplicación web (propuesta)
+En cada fold, los datos sintéticos se generaron únicamente a partir de los participantes de entrenamiento, nunca del participante de prueba. Esto evita fuga de información entre entrenamiento y evaluación.
 
-Se plantea una aplicación web como herramienta de testeo e interpretación, con el siguiente flujo: ingreso del código del participante y del puntaje PSS → carga de las señales basal, cognitiva y de recuperación → procesamiento ECG y detección de picos R → extracción de features HRV → cálculo del recovery score → aplicación del modelo MLP entrenado → visualización de la predicción (recuperado/no_recuperado), del PSS como contexto y de una interpretación integrada.
+---
+
+### 10. Edge Impulse
+
+El dataset final fue exportado a Edge Impulse con el archivo:
+
+```text
+outputs/05_dataset_edge_impulse_recuperacion.csv
+```
+
+El CSV contiene 15 features HRV y la columna `label`. En Edge Impulse se configuró:
+
+| Configuración | Valor |
+|---|---|
+| Input | 15 features |
+| Processing block | Flatten / Features |
+| Learning block | Classification / Keras |
+| Ciclos de entrenamiento | 50 |
+| Learning rate | 0.0005 |
+| Validación interna | 20 % |
+| Clases | `recuperado`, `no_recuperado` |
+
+Edge Impulse se utilizó principalmente para demostrar la viabilidad de implementación del clasificador en una plataforma de *edge machine learning*. La validación interna de Edge no se considera la validación principal del proyecto, porque proviene del mismo CSV y puede mezclar ventanas derivadas de los mismos participantes. Por ello, la validación principal reportada es la validación local LOSO.
+
+**Imagen sugerida**
+
+```markdown
+![Diseño del impulse en Edge Impulse](figures/edge_impulse/impulse_design.png)
+```
+
+> Insertar captura del diseño del impulse: input de 15 features, bloque de procesamiento y clasificador.
+
+```markdown
+![Entrenamiento en Edge Impulse](figures/edge_impulse/training_output.png)
+```
+
+> Insertar captura del panel de entrenamiento con accuracy, loss, matriz de confusión, F1, RAM, Flash e inferencing time.
+
+**Completar con los resultados finales de Edge Impulse**
+
+```text
+Accuracy interna Edge Impulse: [COMPLETAR]
+Loss: [COMPLETAR]
+F1 score: [COMPLETAR]
+AUC: [COMPLETAR]
+Inferencing time: [COMPLETAR]
+RAM usage: [COMPLETAR]
+Flash usage: [COMPLETAR]
+```
+
+---
+
+### 11. Aplicación web
+
+Se implementó una aplicación en Streamlit que permite:
+
+1. Responder la encuesta PSS dentro de la app.
+2. Calcular automáticamente el puntaje PSS.
+3. Subir las tres señales ECG.
+4. Procesar la señal.
+5. Visualizar picos R detectados.
+6. Calcular el recovery score.
+7. Mostrar la clasificación por regla.
+8. Aplicar el modelo MLP local.
+9. Descargar los resultados por ventana.
+
+El PSS se usa solo como contexto y no como feature del modelo.
+
+**Imagen sugerida**
+
+```markdown
+![Interfaz de la aplicación Streamlit](figures/app/streamlit_app.png)
+```
+
+> Insertar captura general de la app funcionando.
+
+```markdown
+![Resultado recovery score y MLP](figures/app/resultados_app.png)
+```
+
+> Insertar captura donde se vea el recovery score, clasificación por regla y predicción MLP. Si hay discrepancia entre regla y MLP, indicar que el resultado principal es el recovery score y la MLP es exploratoria.
 
 ---
 
 ## Resultados
 
-**Adquisición y ventanas.** Se procesaron señales ECG de tres participantes en las tres condiciones experimentales, obteniéndose aproximadamente **55 ventanas reales** en la fase de recuperación tras la segmentación (ventanas de 30 s, paso de 15 s).
+### 1. Ventanas extraídas
 
-**Análisis de sensibilidad del umbral de recuperación.** La distribución de clases varió considerablemente según el umbral elegido:
+Luego de la corrección de picos R, se obtuvieron las siguientes ventanas válidas:
 
-| Umbral | no_recuperado | recuperado |
-|---|---|---|
-| 40 % | 32 | 23 |
-| 50 % | 37 | 18 |
-| **60 % (elegido)** | **39** | **16** |
-| 70 % | 49 | 6 |
-| 80 % | 51 | 4 |
+| Participante | Estado | Duración aproximada | Ventanas válidas |
+|---|---|---:|---:|
+| P01 | Basal | 5.04 min | 19 |
+| P01 | Cognitivo | 5.08 min | 19 |
+| P01 | Recuperación | 5.09 min | 19 |
+| P02 | Basal | 5.10 min | 19 |
+| P02 | Cognitivo | 4.39 min | 16 |
+| P02 | Recuperación | 5.04 min | 19 |
+| P03 | Basal | 3.71 min | 13 |
+| P03 | Cognitivo | 3.93 min | 14 |
+| P03 | Recuperación | 4.58 min | 17 |
 
-Un umbral de 70 % —el primero considerado— generaba un desbalance severo (49 vs. 6). El umbral de 60 % se seleccionó por ofrecer el mejor compromiso entre exigencia fisiológica y balance de clases para el entrenamiento posterior.
+En total se obtuvieron **55 ventanas reales de recuperación**.
 
-**Aumento sintético.** Con `RECOVERY_THRESHOLD = 60 %` y 3 muestras sintéticas generadas por cada muestra real, el dataset aumentado alcanzó aproximadamente 156 muestras de la clase no_recuperado y 64 de la clase recuperado.
+---
 
-**Desempeño del modelo MLP (validación leave-one-subject-out).**
+### 2. Control de calidad
 
-| Fold (sujeto de prueba) | Accuracy | F1 macro |
-|---|---|---|
-| P01 | 0.842 | 0.808 |
-| P02 | 0.053 | 0.050 |
-| P03 | 0.588 | 0.370 |
-| **Promedio** | **0.494** | **0.409** |
+El control de calidad numérico no detectó ventanas sospechosas:
 
-El desempeño fue marcadamente heterogéneo entre participantes: el modelo generalizó razonablemente bien al predecir sobre P01, pero falló casi por completo al predecir sobre P02. Esta variabilidad es consistente con la distribución desigual de clases por sujeto —algunos participantes concentran mayoritariamente ventanas "recuperadas" y otros mayoritariamente "no_recuperadas"— y con el tamaño extremadamente reducido de la muestra a nivel de sujetos (n=3), que impide que el modelo aprenda patrones fisiológicos generalizables más allá de las particularidades individuales de cada participante.
+```text
+Ventanas sospechosas: 0
+```
 
-Por estas razones, los resultados del sistema se interpretan en un orden jerárquico: (1) el **recovery_score** fisiológico y su clasificación por regla constituyen el resultado principal e interpretable del proyecto; (2) la **predicción de la MLP** se ofrece como apoyo exploratorio complementario, sin validez clínica; y (3) el **puntaje PSS-10/PSS-14** se reporta como contexto de estrés percibido, sin intervenir en el modelo.
+Las frecuencias cardíacas promedio por estado se mantuvieron en rangos fisiológicos razonables:
+
+| Participante | Basal HR_mean | Cognitivo HR_mean | Recuperación HR_mean |
+|---|---:|---:|---:|
+| P01 | 72.27 bpm | 75.04 bpm | 71.59 bpm |
+| P02 | 78.51 bpm | 82.71 bpm | 77.18 bpm |
+| P03 | 66.68 bpm | 72.81 bpm | 69.80 bpm |
+
+Esto sugiere que la corrección en la detección de picos R permitió obtener intervalos RR más estables.
+
+**Imagen sugerida**
+
+```markdown
+![Control de calidad de picos R corregido](outputs/qc_picos_R/QC_P01_recuperacion_picosR.png)
+```
+
+---
+
+### 3. Distribución de clases reales
+
+Con `RECOVERY_THRESHOLD = 60`, las 55 ventanas reales de recuperación quedaron distribuidas de la siguiente manera:
+
+| Clase | Ventanas reales |
+|---|---:|
+| `recuperado` | 33 |
+| `no_recuperado` | 22 |
+
+La distribución por participante fue:
+
+| Participante | `no_recuperado` | `recuperado` |
+|---|---:|---:|
+| P01 | 4 | 15 |
+| P02 | 1 | 18 |
+| P03 | 17 | 0 |
+
+Esta distribución evidencia una diferencia marcada entre participantes, especialmente en P03, donde todas las ventanas de recuperación fueron clasificadas como `no_recuperado`.
+
+---
+
+### 4. Dataset aumentado
+
+Se generaron tres muestras sintéticas por cada muestra real, únicamente en el espacio de características:
+
+| Tipo de muestra | `no_recuperado` | `recuperado` |
+|---|---:|---:|
+| Real | 22 | 33 |
+| Sintética | 66 | 99 |
+| **Total** | **88** | **132** |
+
+El dataset final para entrenamiento y Edge Impulse tuvo:
+
+```text
+220 muestras × 15 features + 1 etiqueta
+```
+
+---
+
+### 5. Validación MLP local — LOSO
+
+Los resultados de la validación leave-one-subject-out fueron:
+
+| Fold | Participante de prueba | Accuracy | F1 macro | Muestras reales de prueba |
+|---|---|---:|---:|---:|
+| 1 | P01 | 0.789 | 0.756 | 19 |
+| 2 | P02 | 0.737 | 0.424 | 19 |
+| 3 | P03 | 0.059 | 0.056 | 17 |
+| **Promedio** | — | **0.528** | **0.412** | — |
+
+El modelo obtuvo buen desempeño relativo en P01 y accuracy aceptable en P02, pero falló al generalizar hacia P03. Esto se explica por la distribución de clases: P01 y P02 contienen mayoritariamente ventanas recuperadas, mientras que P03 contiene únicamente ventanas no recuperadas. Con solo tres participantes, el modelo no dispone de suficiente variabilidad interindividual para aprender patrones robustos.
+
+**Imagen sugerida**
+
+```markdown
+![Matriz de confusión MLP LOSO](outputs/06_matriz_confusion_MLP_LOSO.png)
+```
+
+---
+
+### 6. Interpretación de la app
+
+En la app final, pueden aparecer casos donde el recovery score y la MLP no coinciden. Esto no debe presentarse como una falla del sistema, sino como una consecuencia esperable de trabajar con un modelo exploratorio entrenado con una muestra pequeña.
+
+La interpretación jerárquica propuesta es:
+
+1. **Salida principal:** recovery score y clasificación por regla.
+2. **Salida secundaria:** predicción MLP exploratoria.
+3. **Contexto:** puntaje PSS.
+
+Cuando exista discordancia, debe priorizarse el recovery score, ya que es la métrica fisiológica definida explícitamente a partir del retorno hacia el basal.
 
 ---
 
 ## Conclusiones
 
-- Se logró implementar un pipeline completo y funcional de extremo a extremo —desde la señal ECG cruda hasta un índice interpretable de recuperación autonómica— a pesar de contar con una muestra piloto de solo tres participantes.
-- El *recovery_score*, construido a partir de la comparación de features HRV de cada ventana de recuperación contra los promedios basal y cognitivo individuales, resultó ser una métrica más coherente con la pregunta de investigación que una clasificación directa basal/cognitivo/recuperación, ya que responde explícitamente si el participante recuperó o no su estado autonómico.
-- El umbral de 60 % demostró ser un criterio exploratorio razonable para balancear exigencia fisiológica y proporción de clases, pero debe entenderse como una decisión metodológica del estudio piloto y no como un estándar clínico validado externamente.
-- El modelo MLP, si bien mostró un desempeño prometedor en algunos folds (P01), no generalizó de forma estable entre los tres participantes (accuracy promedio de 0.49 y F1 macro de 0.41 en validación leave-one-subject-out), lo que refleja principalmente la limitación del tamaño muestral (n=3) y la heterogeneidad individual, y no necesariamente una falla del enfoque metodológico.
-- El uso de datos sintéticos restringido al espacio de características —evitando la generación de ECG crudo sintético— permitió aumentar el volumen de entrenamiento sin comprometer la validez fisiológica de los datos reales, aunque no sustituye la necesidad de una muestra más amplia y diversa de participantes.
-- Como trabajo futuro, se recomienda ampliar la muestra a un número de participantes que permita evaluar significancia estadística, explorar features adicionales en el dominio de la frecuencia (por ejemplo, razón LF/HF), y completar la integración de la aplicación web para uso exploratorio en contextos académicos reales.
-- En conjunto, el proyecto debe interpretarse como una **prueba de concepto metodológica válida**, no como un sistema clínicamente validado: sienta las bases de un pipeline reproducible de ECG-HRV para estudios de recuperación autonómica, cuya robustez estadística depende de futuras ampliaciones de la muestra.
+- Se implementó un pipeline funcional para procesar ECG crudo, detectar picos R, extraer intervalos RR, calcular features HRV y estimar recuperación autonómica post carga cognitiva.
+
+- La revisión visual del preprocesamiento permitió identificar errores en la detección inicial de picos R. La corrección mediante envolvente absoluta del QRS y refinamiento por máximo absoluto mejoró la estabilidad del procesamiento y eliminó ventanas sospechosas en el control de calidad numérico.
+
+- El enfoque basado en **recovery score** fue más adecuado que una clasificación directa de estados, porque responde a la pregunta central del proyecto: si el participante recupera o no su estado autonómico tras la tarea cognitiva.
+
+- Con el umbral exploratorio de 60 %, se obtuvo una distribución real de 33 ventanas recuperadas y 22 no recuperadas. Este umbral debe entenderse como una decisión metodológica del estudio piloto, no como un estándar clínico validado.
+
+- El modelo MLP local alcanzó un accuracy promedio de 0.528 y un F1 macro de 0.412 en validación LOSO. Estos resultados muestran que el modelo no generaliza de forma estable entre participantes, principalmente por el tamaño muestral reducido y la distribución desigual de clases por sujeto.
+
+- El aumento sintético se aplicó solo a features HRV y no a la señal ECG cruda, lo cual evita introducir morfologías cardíacas artificiales difíciles de validar.
+
+- Edge Impulse permitió demostrar la viabilidad de trasladar el clasificador a una plataforma de aprendizaje automático en el borde. Sin embargo, la validación local LOSO se considera más confiable que la validación interna aleatoria de Edge para este estudio.
+
+- El sistema final debe interpretarse como una **prueba de concepto académica y exploratoria**, no como una herramienta clínica. Para validar el enfoque sería necesario ampliar la muestra, incorporar más participantes con diferentes niveles de estrés, explorar métricas adicionales y evaluar la estabilidad del recovery score en protocolos repetidos.
+
+---
+
+## Limitaciones
+
+- La muestra incluyó solo tres participantes, por lo que no es posible generalizar los resultados.
+- Las ventanas solapadas aumentan observaciones, pero no equivalen a participantes independientes.
+- El recovery score depende de un umbral exploratorio definido por el equipo.
+- La MLP puede aprender patrones específicos de cada participante y no necesariamente patrones fisiológicos generales.
+- No se incorporaron métricas HRV de frecuencia, como LF, HF o LF/HF, debido al tamaño de ventana y al alcance del proyecto.
+- La app no debe ser utilizada con fines diagnósticos.
+
+---
+
+## Trabajo futuro
+
+- Aumentar el número de participantes.
+- Usar protocolos repetidos para evaluar confiabilidad intra-sujeto.
+- Comparar distintos umbrales de recovery score.
+- Incorporar análisis de frecuencia cuando existan registros más largos.
+- Evaluar modelos más simples e interpretables, como regresión logística o Random Forest.
+- Explorar validación externa con nuevos participantes no usados durante el desarrollo.
+- Mejorar la interfaz de la app para mostrar consistencia o discordancia entre regla fisiológica y MLP.
 
 ---
 
 ## Referencias
 
-[1] G. Laborie et al., "Mental workload alters heart rate variability, lowering non-linear dynamics," *Frontiers in Physiology*, 2019. PMC6528181.
+[1] Task Force of the European Society of Cardiology and the North American Society of Pacing and Electrophysiology. (1996). Heart rate variability: Standards of measurement, physiological interpretation and clinical use. *Circulation, 93*(5), 1043–1065. https://pubmed.ncbi.nlm.nih.gov/8598068/
 
-[2] M. Malik, "Heart rate variability: standards of measurement, physiological interpretation, and clinical use," *IEEE Trans. Biomed. Eng.*, 1996.
+[2] Shaffer, F., & Ginsberg, J. P. (2017). An overview of heart rate variability metrics and norms. *Frontiers in Public Health, 5*, 258. https://doi.org/10.3389/fpubh.2017.00258
 
-[3] F. Shaffer and J. P. Ginsberg, "An overview of heart rate variability metrics and norms," *Front. Public Health*, 2017.
+[3] Kim, H. G., Cheon, E. J., Bai, D. S., Lee, Y. H., & Koo, B. H. (2018). Stress and heart rate variability: A meta-analysis and review of the literature. *Psychiatry Investigation, 15*(3), 235–245. https://doi.org/10.30773/pi.2017.08.17
 
-[4] H.-G. Kim, E.-J. Cheon, D.-S. Bai, et al., "Stress and heart rate variability: a meta-analysis," *Neurosci. Biobehav. Rev.*, 2018.
+[4] Delliaux, S., Delaforge, A., Deharo, J.-C., & Chaumet, G. (2019). Mental workload alters heart rate variability, lowering non-linear dynamics. *Frontiers in Physiology, 10*, 565. https://doi.org/10.3389/fphys.2019.00565
 
-[5] J. Wei et al., "Cognitive Load Inference Using Physiological Markers in Virtual Reality," in *2025 IEEE Conference on Virtual Reality and 3D User Interfaces (VR)*, 2025.
+[5] Arutyunova, K. R., et al. (2024). Heart rate dynamics for cognitive load estimation in a realistic driving scenario. *Scientific Reports, 14*, 29090. https://doi.org/10.1038/s41598-024-79728-x
 
-[6] A. Bhatti et al., "CLARE: Cognitive Load Assessment in Realtime with Multimodal Data," arXiv:2404.17098, 2024.
+[6] Cohen, S., Kamarck, T., & Mermelstein, R. (1983). A global measure of perceived stress. *Journal of Health and Social Behavior, 24*(4), 385–396. https://www.jstor.org/stable/2136404
 
-[7] Z. Ahmad et al., "Multi-level Stress Assessment from ECG in a Virtual Reality Environment using Multimodal Fusion," arXiv:2107.04566, 2021.
+[7] PLUX Wireless Biosignals. (s. f.). *Getting started: BITalino electrocardiography (ECG) sensor*. https://support.pluxbiosignals.com/knowledge-base/getting-started-bitalino-electrocardiography-ecg-sensor/
 
-[8] M. Pradeep et al., "Cross-Modal Computational Model of Brain-Heart Interactions via HRV and EEG Features," arXiv:2601.06792, 2026.
+[8] Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., et al. (2011). Scikit-learn: Machine Learning in Python. *Journal of Machine Learning Research, 12*, 2825–2830. https://www.jmlr.org/papers/v12/pedregosa11a.html
 
-[9] A. Londoño-Vargas et al., "Longitudinal effects of stress in an academic context on HRV and wellbeing in university students," 2025. PMC12239435.
-
-[10] P. Králíčková et al., "Heart rate variability, perceived stress and willingness to seek counselling in undergraduate students," *J. Psychosom. Res.*, 2022.
-
-[11] Analog Devices, "AD8232 Single-Lead, Heart Rate Monitor Front End," Data Sheet Rev. D, Analog Devices Inc., 2020.
-
-> *Nota:* de la bibliografía original del avance del proyecto se excluyeron las fuentes centradas en arquitecturas de red no utilizadas en la implementación final (p. ej., 1D-CNN, TCN causal, atención temporal) y aquellas de dominio no directamente relacionado con el proyecto (p. ej., ruido de habla irrelevante), ya que el sistema finalmente implementado usa un modelo MLP sobre features HRV y no dichas arquitecturas.
+[9] Edge Impulse. (s. f.). *Impulse design*. Edge Impulse Documentation. https://docs.edgeimpulse.com/studio/projects/impulse-design
 
 ---
 
-## Biografías de autores
+## Bibliografía de autores
 
 ### Néstor Allende
-[Breve biografía: carrera, ciclo/semestre, universidad, intereses académicos relacionados con señales biomédicas o ciencia de datos, correo o contacto opcional.]
+Estudiante de Ingeniería Biomédica con interés en procesamiento de señales fisiológicas, análisis de datos biomédicos y aplicaciones de aprendizaje automático en salud digital. En este proyecto participó en el desarrollo del repositorio, organización del informe y procesamiento computacional.
 
 ### Ana Angulo
-[Breve biografía: carrera, ciclo/semestre, universidad, intereses académicos relacionados con señales biomédicas o ciencia de datos, correo o contacto opcional.]
+Estudiante de Ingeniería Biomédica con interés en instrumentación, adquisición de señales biomédicas y evaluación experimental. En este proyecto participó en el diseño del protocolo, adquisición de señales ECG y validación del procedimiento experimental.
 
-### Luis Loayza
-[Breve biografía: carrera, ciclo/semestre, universidad, intereses académicos relacionados con señales biomédicas o ciencia de datos, correo o contacto opcional.]
+### Luis/Bryan Loayza
+Estudiante de Ingeniería Biomédica con interés en procesamiento de señales biomédicas, machine learning y desarrollo de aplicaciones interactivas. En este proyecto participó en el pipeline de HRV, cálculo del recovery score, entrenamiento MLP local, integración en Streamlit y análisis de resultados.
 
 ### Natalie Sante
-[Breve biografía: carrera, ciclo/semestre, universidad, intereses académicos relacionados con señales biomédicas o ciencia de datos, correo o contacto opcional.]
+Estudiante de Ingeniería Biomédica con interés en análisis fisiológico, bienestar académico y aplicaciones de biosensores. En este proyecto participó en la organización experimental, revisión de resultados y discusión de la interpretación fisiológica.
 
 ### Nataly Deledesma
-[Breve biografía: carrera, ciclo/semestre, universidad, intereses académicos relacionados con señales biomédicas o ciencia de datos, correo o contacto opcional.]
+Estudiante de Ingeniería Biomédica con interés en señales biomédicas, evaluación de estrés y tecnologías de monitoreo no invasivo. En este proyecto participó en la adquisición de datos, revisión del protocolo y apoyo en la documentación final.
 
-
+> **Nota:** Reemplazar o ajustar estas biografías según la contribución real de cada integrante antes de entregar el informe final.
