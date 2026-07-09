@@ -444,7 +444,7 @@ El PSS-14 se usa solo como contexto y no como feature del modelo.
 
 ![Interfaz de la aplicación Streamlit](Software/streamlit_app.png)
 
-![Resultado recovery score y MLP](Software/ResultadosApp.png)
+![Resultado recovery score y MLP](Software/ResultadosApp.jpeg)
 
 ---
 
