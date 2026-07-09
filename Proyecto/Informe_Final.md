@@ -217,7 +217,7 @@ Durante la revisión visual se observó que una detección basada solo en picos 
 
 Este ajuste permitió reducir falsas detecciones y estabilizar las métricas HRV.
 
-** Archivo **
+**Archivo**
 
 [Control de calidad de picos R](Señales/00_control_calidad_features.csv)
 
@@ -410,7 +410,7 @@ Edge Impulse se utilizó principalmente para demostrar la viabilidad de implemen
 
 
 
-**Completar con los resultados finales de Edge Impulse**
+**Resultados finales de Edge Impulse**
 
 ```text
 Accuracy interna Edge Impulse: 100%
