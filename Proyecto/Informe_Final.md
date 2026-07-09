@@ -189,9 +189,9 @@ Proyecto_HRV/
 └── app.py
 ```
 
-**Imagen **
+**Imagen**
 
-![Organización de archivos del proyecto](Archivos/configuracion_electrodos.png)
+![Organización de archivos del proyecto](Archivos/OrdenCarpetas.png)
 
 ---
 
@@ -502,10 +502,8 @@ Las frecuencias cardíacas promedio por estado se mantuvieron en rangos fisioló
 
 Esto sugiere que la corrección en la detección de picos R permitió obtener intervalos RR más estables.
 
-**Imagen**
 
-
-![Control de calidad de picos R corregido](Señales/QC_P01_recuperacion_picosR.png)
+[Control de calidad de picos R corregido](Señales/QC_P01_recuperacion_picosR.png)
 
 
 ---
@@ -562,9 +560,8 @@ Los resultados de la validación leave-one-subject-out fueron:
 
 El modelo obtuvo buen desempeño relativo en P01 y accuracy aceptable en P02, pero falló al generalizar hacia P03. Esto se explica por la distribución de clases: P01 y P02 contienen mayoritariamente ventanas recuperadas, mientras que P03 contiene únicamente ventanas no recuperadas. Con solo tres participantes, el modelo no dispone de suficiente variabilidad interindividual para aprender patrones robustos.
 
-**Imagen**
 
-![Matriz de confusión MLP LOSO](Señales/06_matriz_confusion_MLP_LOSO.png)
+[Matriz de confusión MLP LOSO](Señales/06_matriz_confusion_MLP_LOSO.png)
 
 
 ---
