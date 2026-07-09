@@ -401,7 +401,7 @@ El CSV contiene 15 features HRV y la columna `label`. En Edge Impulse se configu
 
 Edge Impulse se utilizó principalmente para demostrar la viabilidad de implementación del clasificador en una plataforma de *edge machine learning*. La validación interna de Edge no se considera la validación principal del proyecto, porque proviene del mismo CSV y puede mezclar ventanas derivadas de los mismos participantes. Por ello, la validación principal reportada es la validación local LOSO.
 
-**Imagen **
+**Imagen**
 
 ![Diseño del impulse en Edge Impulse](Software/impulseModel.jpeg)
 ![Data Explorer en Edge Impulse](Software/dataExplorer.jpeg)
