@@ -80,7 +80,7 @@ Antes de registrar la señal ECG, cada participante respondió la encuesta **PSS
 
 [Formulario PSS-14 aplicado a los participantes](Archivos/PSS-14.pdf)
 
-![Formulario PSS-14 aplicado a los participantes](Archivos/PSS14imagen.pdf)
+![Formulario PSS-14 aplicado a los participantes](Archivos/PSS14imagen.png)
 
 
 El análisis de la encuesta se realizó mediante Python, convirtiendo las respuestas cualitativas a puntajes numéricos de 0 a 4. Los ítems positivos se invirtieron según la estructura de la PSS-14 y luego se calculó el puntaje total por participante.
