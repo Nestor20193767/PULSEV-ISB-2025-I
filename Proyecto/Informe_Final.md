@@ -70,29 +70,18 @@ La solución implementada se organiza en etapas que van desde el protocolo de ad
 
 La adquisición se realizó en tres participantes: `P01`, `P02` y `P03`. El protocolo siguió una secuencia fija para reducir variaciones entre sujetos y mantener el mismo orden experimental en todos los registros.
 
-```text
-Encuesta PSS-14
-↓
-Colocación de electrodos ECG
-↓
-Registro basal
-↓
-Registro durante prueba cognitiva 2-back
-↓
-Registro de recuperación
-```
+Protocolo:
+
+[Archivo del protocolo de adquisición](Archivos/Protocolo_Adquisicion.pdf)
 
 #### 1.1 Encuesta PSS-14
 
 Antes de registrar la señal ECG, cada participante respondió la encuesta **PSS-14** (*Perceived Stress Scale*), usada como medida subjetiva del estrés percibido. Este puntaje no se utilizó como entrada del modelo, sino como información contextual para interpretar el estado general del participante antes de la adquisición fisiológica.
 
-**Imagen sugerida**
+[Formulario PSS-14 aplicado a los participantes](Archivos/PSS-14.pdf)
 
-```markdown
-![Formulario PSS-14 aplicado a los participantes](figures/protocolo/formulario_pss14.png)
-```
+![Formulario PSS-14 aplicado a los participantes](Archivos/PSS14imagen.pdf)
 
-> Insertar una captura del formulario o de la encuesta aplicada. Puede ser una imagen del Google Forms o una captura de las preguntas principales.
 
 El análisis de la encuesta se realizó mediante Python, convirtiendo las respuestas cualitativas a puntajes numéricos de 0 a 4. Los ítems positivos se invirtieron según la estructura de la PSS-14 y luego se calculó el puntaje total por participante.
 
