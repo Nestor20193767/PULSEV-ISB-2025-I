@@ -739,5 +739,5 @@ Estudiante de Ingeniería Biomédica con interés en procesamiento de señales b
 Estudiante de Ingeniería Biomédica con interés en análisis fisiológico, bienestar académico y aplicaciones de biosensores. En este proyecto participó en la organización experimental, revisión de resultados y discusión de la interpretación fisiológica.
 
 ### Nataly Deledesma
-Estudiante de Ingeniería Biomédica con interés en señales biomédicas, evaluación de estrés y tecnologías de monitoreo no invasivo. En este proyecto participó en la adquisición de datos, revisión del protocolo y apoyo en la documentación final.
+Soy estudiante de Ingeniería Biomédica con interés en el análisis de señales biomédicas, el procesamiento de datos fisiológicos y el desarrollo de herramientas de apoyo para la salud. Me apasiona aprender nuevas tecnologías y aplicarlas en proyectos que generen un impacto positivo en la sociedad.
 
