@@ -124,31 +124,24 @@ print(df[["Marca temporal", "PSS_Total"]])
 df.to_excel("Resultados_PSS14.xlsx", index=False)
 ```
 
-El archivo generado con los puntajes fue:
-
-```text
-Resultados_PSS14.xlsx
-```
-
-**Imagen sugerida**
-
-```markdown
-![Resultados del análisis PSS-14](figures/resultados/resultados_pss14.png)
-```
-
-> Insertar una captura de la tabla generada por el código, o una tabla/resumen con el puntaje `PSS_Total` de cada participante.
 
 #### 1.2 Configuración de electrodos ECG
 
 La señal ECG fue registrada con BITalino y OpenSignals usando una configuración tipo **segunda derivación ECG** o **Lead II**, adecuada para resaltar el complejo QRS y facilitar la detección de picos R. Esta configuración fue seleccionada porque permite obtener una señal con morfología clara para el cálculo de intervalos RR y métricas HRV.
 
-**Imagen sugerida**
+## Configuración de electrodos
 
-```markdown
-![Configuración de electrodos ECG en segunda derivación](figures/protocolo/configuracion_electrodos_2da_derivacion.png)
-```
+Los electrodos fueron colocados siguiendo una configuración de tres derivaciones:
 
-> Insertar la imagen de la configuración de electrodos. En el texto de la figura se puede indicar que corresponde a la segunda derivación ECG usada durante la adquisición.
+| Electrodo        | Ubicación        |
+| ---------------- | ---------------- |
+| Positivo (+)     | Cresta ilíaca    |
+| Negativo (-)     | Hombro derecho   |
+| Referencia / GND | Hombro izquierdo |
+
+### Imagen
+
+![Esquema de derivaciones ECG](Archivos/configuracion_electrodos.png)
 
 #### 1.3 Toma de señales ECG
 
@@ -166,13 +159,6 @@ La frecuencia de muestreo utilizada fue de **1000 Hz**. Los registros se organiz
 
 Durante la fase cognitiva, el participante realizó una tarea **2-back**, una prueba de memoria de trabajo en la que debe comparar el estímulo actual con el presentado dos posiciones antes. Esta tarea fue elegida porque incrementa la demanda atencional y de memoria de trabajo, generando una carga cognitiva controlada durante el registro ECG.
 
-**Imagen sugerida**
-
-```markdown
-![Prueba cognitiva 2-back utilizada durante la adquisición](figures/protocolo/prueba_2back.png)
-```
-
-> Insertar una captura de la interfaz, presentación o ejemplo de la prueba 2-back usada durante la adquisición.
 
 #### 1.5 Organización de archivos
 
@@ -203,13 +189,9 @@ Proyecto_HRV/
 └── app.py
 ```
 
-**Imagen sugerida**
+**Imagen **
 
-```markdown
-![Organización de archivos del proyecto](figures/estructura_directorios.png)
-```
-
-> Insertar una captura del explorador de archivos o del repositorio mostrando `data_raw/`, `figures/`, `outputs/`, `models/` y `app.py`.
+![Organización de archivos del proyecto](Archivos/configuracion_electrodos.png)
 
 ---
 
@@ -235,13 +217,10 @@ Durante la revisión visual se observó que una detección basada solo en picos 
 
 Este ajuste permitió reducir falsas detecciones y estabilizar las métricas HRV.
 
-**Imagen sugerida**
+** Archivo **
 
-```markdown
-![Control de calidad de picos R](outputs/qc_picos_R/QC_P01_recuperacion_picosR.png)
-```
+[Control de calidad de picos R](Señales/00_control_calidad_features.csv)
 
-> Insertar una imagen de la carpeta `outputs/qc_picos_R/`, idealmente `QC_P01_recuperacion_picosR.png` o una donde se observe claramente un punto por cada complejo QRS.
 
 ---
 
@@ -422,30 +401,25 @@ El CSV contiene 15 features HRV y la columna `label`. En Edge Impulse se configu
 
 Edge Impulse se utilizó principalmente para demostrar la viabilidad de implementación del clasificador en una plataforma de *edge machine learning*. La validación interna de Edge no se considera la validación principal del proyecto, porque proviene del mismo CSV y puede mezclar ventanas derivadas de los mismos participantes. Por ello, la validación principal reportada es la validación local LOSO.
 
-**Imagen sugerida**
+**Imagen **
 
-```markdown
-![Diseño del impulse en Edge Impulse](figures/edge_impulse/impulse_design.png)
-```
+![Diseño del impulse en Edge Impulse](Software/impulseModel.jpeg)
+![Data Explorer en Edge Impulse](Software/dataExplorer.jpeg)
+![On-Device en Edge Impulse](Software/On_device.jpeg)
+![Data Set en Edge Impulse](Software/dataset.jpeg)
 
-> Insertar captura del diseño del impulse: input de 15 features, bloque de procesamiento y clasificador.
 
-```markdown
-![Entrenamiento en Edge Impulse](figures/edge_impulse/training_output.png)
-```
-
-> Insertar captura del panel de entrenamiento con accuracy, loss, matriz de confusión, F1, RAM, Flash e inferencing time.
 
 **Completar con los resultados finales de Edge Impulse**
 
 ```text
-Accuracy interna Edge Impulse: [COMPLETAR]
-Loss: [COMPLETAR]
-F1 score: [COMPLETAR]
-AUC: [COMPLETAR]
-Inferencing time: [COMPLETAR]
-RAM usage: [COMPLETAR]
-Flash usage: [COMPLETAR]
+Accuracy interna Edge Impulse: 100%
+Loss: 0.05
+F1 score: 1
+AUC: 1
+Inferencing time: 1ms
+RAM usage: 1.4K
+Flash usage: 14.6K
 ```
 
 ---
@@ -466,19 +440,11 @@ Se implementó una aplicación en Streamlit que permite:
 
 El PSS-14 se usa solo como contexto y no como feature del modelo.
 
-**Imagen sugerida**
+**Imagen**
 
-```markdown
-![Interfaz de la aplicación Streamlit](figures/app/streamlit_app.png)
-```
+![Interfaz de la aplicación Streamlit](Software/streamlit_app.png)
 
-> Insertar captura general de la app funcionando.
-
-```markdown
-![Resultado recovery score y MLP](figures/app/resultados_app.png)
-```
-
-> Insertar captura donde se vea el recovery score, clasificación por regla y predicción MLP. Si hay discrepancia entre regla y MLP, indicar que el resultado principal es el recovery score y la MLP es exploratoria.
+![Resultado recovery score y MLP](Software/ResultadosApp.png)
 
 ---
 
@@ -492,17 +458,9 @@ La encuesta PSS-14 permitió obtener un puntaje total de estrés percibido para 
 
 | Participante | PSS_Total | Interpretación contextual |
 |---|---:|---|
-| P01 | [COMPLETAR] | [Bajo / moderado / alto, según criterio usado] |
-| P02 | [COMPLETAR] | [Bajo / moderado / alto, según criterio usado] |
-| P03 | [COMPLETAR] | [Bajo / moderado / alto, según criterio usado] |
-
-**Imagen sugerida**
-
-```markdown
-![Tabla de resultados PSS-14](figures/resultados/resultados_pss14.png)
-```
-
-> Insertar la captura de la tabla generada por el código o del archivo `Resultados_PSS14.xlsx`.
+| P01 | 28 | alto |
+| P02 | 30 | alto |
+| P03 | 29 | alto |
 
 ---
 
@@ -544,11 +502,11 @@ Las frecuencias cardíacas promedio por estado se mantuvieron en rangos fisioló
 
 Esto sugiere que la corrección en la detección de picos R permitió obtener intervalos RR más estables.
 
-**Imagen sugerida**
+**Imagen**
 
-```markdown
-![Control de calidad de picos R corregido](outputs/qc_picos_R/QC_P01_recuperacion_picosR.png)
-```
+
+![Control de calidad de picos R corregido](Señales/QC_P01_recuperacion_picosR.png)
+
 
 ---
 
@@ -604,11 +562,10 @@ Los resultados de la validación leave-one-subject-out fueron:
 
 El modelo obtuvo buen desempeño relativo en P01 y accuracy aceptable en P02, pero falló al generalizar hacia P03. Esto se explica por la distribución de clases: P01 y P02 contienen mayoritariamente ventanas recuperadas, mientras que P03 contiene únicamente ventanas no recuperadas. Con solo tres participantes, el modelo no dispone de suficiente variabilidad interindividual para aprender patrones robustos.
 
-**Imagen sugerida**
+**Imagen**
 
-```markdown
-![Matriz de confusión MLP LOSO](outputs/06_matriz_confusion_MLP_LOSO.png)
-```
+![Matriz de confusión MLP LOSO](Señales/06_matriz_confusion_MLP_LOSO.png)
+
 
 ---
 
@@ -708,4 +665,3 @@ Estudiante de Ingeniería Biomédica con interés en análisis fisiológico, bie
 ### Nataly Deledesma
 Estudiante de Ingeniería Biomédica con interés en señales biomédicas, evaluación de estrés y tecnologías de monitoreo no invasivo. En este proyecto participó en la adquisición de datos, revisión del protocolo y apoyo en la documentación final.
 
-> **Nota:** Reemplazar o ajustar estas biografías según la contribución real de cada integrante antes de entregar el informe final.
