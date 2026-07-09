@@ -581,7 +581,80 @@ Cuando exista discordancia, debe priorizarse el recovery score, ya que es la mé
 ### Codigos del Proyecto
 Los codigos del proyecto y del App se encuentran en la siguiente direccion de carpeta
 
-[Codigos del Proyecto](Codigos)
+[Codigos de Procesamiento](Codigos/CodigoProcesamiento.ipynb)
+
+## Ejecución de la aplicación web
+
+Como parte del proyecto se desarrolló una aplicación web en **Streamlit** para ejecutar el pipeline completo de análisis HRV desde una interfaz gráfica. Esta app permite responder la encuesta PSS, cargar señales ECG, detectar picos R, extraer características HRV, calcular el `recovery_score` y aplicar el modelo MLP local entrenado.
+
+La aplicación está pensada para que el docente pueda correr el sistema de forma local descargando el repositorio de GitHub.
+
+[Carpeta para los codigos de la App](Codigos/App)
+
+---
+
+### Estructura necesaria del repositorio
+
+Para ejecutar correctamente la app, el repositorio debe contener la siguiente estructura:
+
+```text
+Proyecto_HRV/
+├── app.py
+├── requirements.txt
+├── README.md
+├── models/
+│   └── 07_modelo_local_MLP_recuperacion.joblib
+├── assets/
+│   └── icono_app.jpeg
+└── data_demo/
+    ├── basal_demo.txt
+    ├── cognitivo_demo.txt
+    └── recuperacion_demo.txt
+```
+
+Instalación local
+
+Para ejecutar la aplicación en una computadora local, primero se debe clonar el repositorio:
+
+```text
+git clone https://github.com/USUARIO/NOMBRE_DEL_REPOSITORIO.git
+cd NOMBRE_DEL_REPOSITORIO
+```
+Luego se recomienda crear un entorno virtual.
+
+En Windows:
+
+```text
+python -m venv .venv
+.venv\Scripts\activate
+```
+En macOS/Linux:
+
+```text
+python3 -m venv .venv
+source .venv/bin/activate
+```
+Después, instalar las dependencias:
+
+```text
+pip install -r requirements.txt
+```
+El archivo requirements.txt contiene las librerías necesarias para ejecutar el procesamiento ECG, la extracción de features HRV, el modelo MLP y la interfaz web.
+
+Ejecución de la app
+
+Para iniciar la aplicación:
+
+```text
+streamlit run app.py
+```
+
+Luego se abrirá automáticamente una ventana en el navegador. Si no se abre, copiar la URL que aparece en la terminal, usualmente:
+
+http://localhost:8501
+
+
+
 
 ---
 
