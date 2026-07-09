@@ -20,7 +20,7 @@ Durante el control de calidad se identificó que la detección inicial de picos 
 
 A partir de las features HRV se calculó un **recovery score**, definido como un índice porcentual que compara el retorno de las métricas de recuperación hacia el basal individual de cada participante, tomando como referencia el cambio inducido durante la carga cognitiva. Con un umbral exploratorio de 60 %, las 55 ventanas reales de recuperación se distribuyeron en 33 ventanas recuperadas y 22 no recuperadas. Debido al tamaño reducido de la muestra, se generaron datos sintéticos únicamente en el espacio de características, no sobre la señal ECG cruda. El dataset aumentado alcanzó 220 muestras: 132 recuperadas y 88 no recuperadas.
 
-Se entrenó una red neuronal MLP local sobre 15 features HRV y variables relativas al basal. La validación principal se realizó mediante *leave-one-subject-out* (LOSO), obteniendo un accuracy promedio de 0.528 y un F1 macro promedio de 0.412. Estos resultados evidencian una generalización limitada entre participantes, coherente con el carácter piloto del estudio y el tamaño muestral reducido (n = 3). Además, el dataset fue exportado a Edge Impulse para demostrar la viabilidad de implementación del modelo en una plataforma de aprendizaje automático embebido. En consecuencia, el resultado principal del sistema es el **recovery score fisiológico**, mientras que la predicción MLP se interpreta como apoyo exploratorio. El cuestionario PSS-10/PSS-14 se integra únicamente como contexto de estrés percibido y no como entrada del modelo.
+Se entrenó una red neuronal MLP local sobre 15 features HRV y variables relativas al basal. La validación principal se realizó mediante *leave-one-subject-out* (LOSO), obteniendo un accuracy promedio de 0.528 y un F1 macro promedio de 0.412. Estos resultados evidencian una generalización limitada entre participantes, coherente con el carácter piloto del estudio y el tamaño muestral reducido (n = 3). Además, el dataset fue exportado a Edge Impulse para demostrar la viabilidad de implementación del modelo en una plataforma de aprendizaje automático embebido. En consecuencia, el resultado principal del sistema es el **recovery score fisiológico**, mientras que la predicción MLP se interpreta como apoyo exploratorio. El cuestionario PSS-14 se integra únicamente como contexto de estrés percibido y no como entrada del modelo.
 
 ---
 
@@ -56,25 +56,136 @@ Este problema presenta tres dificultades principales:
 2. **Interpretación fisiológica:** las métricas HRV varían entre personas; por ello, no basta comparar valores absolutos entre participantes.
 3. **Tamaño muestral reducido:** el estudio solo cuenta con tres participantes, lo que impide una validación estadística robusta y obliga a interpretar el modelo como exploratorio.
 
-Por estas razones, se optó por una solución basada en comparación intra-sujeto: cada participante se evalúa respecto a su propio basal. Además, el puntaje PSS se utiliza únicamente como contexto subjetivo del estrés percibido, sin incorporarse como entrada del modelo.
+Por estas razones, se optó por una solución basada en comparación intra-sujeto: cada participante se evalúa respecto a su propio basal. Además, el puntaje PSS-14 se utiliza únicamente como contexto subjetivo del estrés percibido, sin incorporarse como entrada del modelo.
 
 ---
 
 ## Propuesta de solución
 
-La solución implementada se organiza en siete etapas principales.
+La solución implementada se organiza en etapas que van desde el protocolo de adquisición hasta el procesamiento, modelado, validación y despliegue exploratorio en Edge Impulse.
 
 ---
 
-### 1. Adquisición de datos
+### 1. Protocolo de adquisición de datos
 
-Se adquirieron señales ECG de tres participantes: `P01`, `P02` y `P03`. Cada participante fue evaluado en tres estados:
+La adquisición se realizó en tres participantes: `P01`, `P02` y `P03`. El protocolo siguió una secuencia fija para reducir variaciones entre sujetos y mantener el mismo orden experimental en todos los registros.
 
-- **Basal:** reposo previo a la tarea.
-- **Cognitivo:** ejecución de tarea cognitiva demandante.
-- **Recuperación:** periodo posterior a la tarea cognitiva.
+```text
+Encuesta PSS-14
+↓
+Colocación de electrodos ECG
+↓
+Registro basal
+↓
+Registro durante prueba cognitiva 2-back
+↓
+Registro de recuperación
+```
 
-La señal ECG fue registrada con BITalino y OpenSignals, con una frecuencia de muestreo de 1000 Hz. Los archivos se organizaron en una estructura por participante y por estado.
+#### 1.1 Encuesta PSS-14
+
+Antes de registrar la señal ECG, cada participante respondió la encuesta **PSS-14** (*Perceived Stress Scale*), usada como medida subjetiva del estrés percibido. Este puntaje no se utilizó como entrada del modelo, sino como información contextual para interpretar el estado general del participante antes de la adquisición fisiológica.
+
+**Imagen sugerida**
+
+```markdown
+![Formulario PSS-14 aplicado a los participantes](figures/protocolo/formulario_pss14.png)
+```
+
+> Insertar una captura del formulario o de la encuesta aplicada. Puede ser una imagen del Google Forms o una captura de las preguntas principales.
+
+El análisis de la encuesta se realizó mediante Python, convirtiendo las respuestas cualitativas a puntajes numéricos de 0 a 4. Los ítems positivos se invirtieron según la estructura de la PSS-14 y luego se calculó el puntaje total por participante.
+
+```python
+import pandas as pd
+
+# Leer archivo
+df = pd.read_excel("Formulario Proyecto.xlsx")
+
+# Conversión de respuestas a puntajes
+conversion = {
+    "Nunca": 0,
+    "Casi nunca": 1,
+    "De vez en cuando": 2,
+    "A menudo": 3,
+    "Muy a menudo": 4,
+    "Muy amenudo": 4   # por si Google Forms lo escribió así
+}
+
+# Ítems de la encuesta, todas las columnas excepto la marca temporal
+items = list(df.columns[1:])
+
+# Convertir texto a números
+for col in items:
+    df[col] = df[col].map(conversion)
+
+# Ítems invertidos de la PSS-14
+invertidos = [3, 4, 5, 6, 8, 9, 12]  # posiciones 4, 5, 6, 7, 9, 10 y 13
+
+for i in invertidos:
+    df[items[i]] = 4 - df[items[i]]
+
+# Puntaje total
+df["PSS_Total"] = df[items].sum(axis=1)
+
+# Mostrar resultados
+print(df[["Marca temporal", "PSS_Total"]])
+
+# Guardar archivo con el puntaje
+df.to_excel("Resultados_PSS14.xlsx", index=False)
+```
+
+El archivo generado con los puntajes fue:
+
+```text
+Resultados_PSS14.xlsx
+```
+
+**Imagen sugerida**
+
+```markdown
+![Resultados del análisis PSS-14](figures/resultados/resultados_pss14.png)
+```
+
+> Insertar una captura de la tabla generada por el código, o una tabla/resumen con el puntaje `PSS_Total` de cada participante.
+
+#### 1.2 Configuración de electrodos ECG
+
+La señal ECG fue registrada con BITalino y OpenSignals usando una configuración tipo **segunda derivación ECG** o **Lead II**, adecuada para resaltar el complejo QRS y facilitar la detección de picos R. Esta configuración fue seleccionada porque permite obtener una señal con morfología clara para el cálculo de intervalos RR y métricas HRV.
+
+**Imagen sugerida**
+
+```markdown
+![Configuración de electrodos ECG en segunda derivación](figures/protocolo/configuracion_electrodos_2da_derivacion.png)
+```
+
+> Insertar la imagen de la configuración de electrodos. En el texto de la figura se puede indicar que corresponde a la segunda derivación ECG usada durante la adquisición.
+
+#### 1.3 Toma de señales ECG
+
+Cada participante fue evaluado en tres estados consecutivos:
+
+| Orden | Estado | Descripción | Archivo esperado |
+|---:|---|---|---|
+| 1 | Basal | Registro en reposo previo a la tarea cognitiva | `PXX_basal_ECGv2.txt` |
+| 2 | Cognitivo | Registro durante la prueba cognitiva 2-back | `PXX_cognitiva_ECGv2.txt` |
+| 3 | Recuperación | Registro posterior a la tarea cognitiva | `PXX_recuperacion_ECGv2.txt` |
+
+La frecuencia de muestreo utilizada fue de **1000 Hz**. Los registros se organizaron por participante y por estado para facilitar el procesamiento posterior.
+
+#### 1.4 Prueba cognitiva 2-back
+
+Durante la fase cognitiva, el participante realizó una tarea **2-back**, una prueba de memoria de trabajo en la que debe comparar el estímulo actual con el presentado dos posiciones antes. Esta tarea fue elegida porque incrementa la demanda atencional y de memoria de trabajo, generando una carga cognitiva controlada durante el registro ECG.
+
+**Imagen sugerida**
+
+```markdown
+![Prueba cognitiva 2-back utilizada durante la adquisición](figures/protocolo/prueba_2back.png)
+```
+
+> Insertar una captura de la interfaz, presentación o ejemplo de la prueba 2-back usada durante la adquisición.
+
+#### 1.5 Organización de archivos
 
 ```text
 Proyecto_HRV/
@@ -91,6 +202,13 @@ Proyecto_HRV/
 │       ├── P03_basal_ECGv2.txt
 │       ├── P03_cognitiva_ECGv2.txt
 │       └── P03_recuperacion_ECGv2.txt
+├── figures/
+│   ├── protocolo/
+│   │   ├── formulario_pss14.png
+│   │   ├── configuracion_electrodos_2da_derivacion.png
+│   │   └── prueba_2back.png
+│   └── resultados/
+│       └── resultados_pss14.png
 ├── outputs/
 ├── models/
 └── app.py
@@ -102,7 +220,7 @@ Proyecto_HRV/
 ![Organización de archivos del proyecto](figures/estructura_directorios.png)
 ```
 
-> Insertar una captura del explorador de archivos o del repositorio mostrando `data_raw/`, `outputs/`, `models/` y `app.py`.
+> Insertar una captura del explorador de archivos o del repositorio mostrando `data_raw/`, `figures/`, `outputs/`, `models/` y `app.py`.
 
 ---
 
@@ -244,7 +362,7 @@ RMSSD_ratio_basal
 pNN50_ratio_basal
 ```
 
-No se incluyó `recovery_score` como entrada para evitar *data leakage*, ya que esa variable se usa para definir la etiqueta. Tampoco se incluyó el puntaje PSS, porque se utiliza solo como contexto subjetivo.
+No se incluyó `recovery_score` como entrada para evitar *data leakage*, ya que esa variable se usa para definir la etiqueta. Tampoco se incluyó el puntaje PSS-14, porque se utiliza solo como contexto subjetivo.
 
 La arquitectura local fue:
 
@@ -347,8 +465,8 @@ Flash usage: [COMPLETAR]
 
 Se implementó una aplicación en Streamlit que permite:
 
-1. Responder la encuesta PSS dentro de la app.
-2. Calcular automáticamente el puntaje PSS.
+1. Responder la encuesta PSS-14 dentro de la app.
+2. Calcular automáticamente el puntaje PSS-14.
 3. Subir las tres señales ECG.
 4. Procesar la señal.
 5. Visualizar picos R detectados.
@@ -357,7 +475,7 @@ Se implementó una aplicación en Streamlit que permite:
 8. Aplicar el modelo MLP local.
 9. Descargar los resultados por ventana.
 
-El PSS se usa solo como contexto y no como feature del modelo.
+El PSS-14 se usa solo como contexto y no como feature del modelo.
 
 **Imagen sugerida**
 
@@ -377,7 +495,29 @@ El PSS se usa solo como contexto y no como feature del modelo.
 
 ## Resultados
 
-### 1. Ventanas extraídas
+### 1. Resultados de la encuesta PSS-14
+
+La encuesta PSS-14 permitió obtener un puntaje total de estrés percibido para cada participante antes de la adquisición ECG. Este resultado se reporta como contexto subjetivo y no se incorporó como variable de entrada al modelo MLP ni al cálculo del recovery score.
+
+**Completar con los puntajes reales obtenidos:**
+
+| Participante | PSS_Total | Interpretación contextual |
+|---|---:|---|
+| P01 | [COMPLETAR] | [Bajo / moderado / alto, según criterio usado] |
+| P02 | [COMPLETAR] | [Bajo / moderado / alto, según criterio usado] |
+| P03 | [COMPLETAR] | [Bajo / moderado / alto, según criterio usado] |
+
+**Imagen sugerida**
+
+```markdown
+![Tabla de resultados PSS-14](figures/resultados/resultados_pss14.png)
+```
+
+> Insertar la captura de la tabla generada por el código o del archivo `Resultados_PSS14.xlsx`.
+
+---
+
+### 2. Ventanas extraídas
 
 Luego de la corrección de picos R, se obtuvieron las siguientes ventanas válidas:
 
@@ -397,7 +537,7 @@ En total se obtuvieron **55 ventanas reales de recuperación**.
 
 ---
 
-### 2. Control de calidad
+### 3. Control de calidad
 
 El control de calidad numérico no detectó ventanas sospechosas:
 
@@ -423,7 +563,7 @@ Esto sugiere que la corrección en la detección de picos R permitió obtener in
 
 ---
 
-### 3. Distribución de clases reales
+### 4. Distribución de clases reales
 
 Con `RECOVERY_THRESHOLD = 60`, las 55 ventanas reales de recuperación quedaron distribuidas de la siguiente manera:
 
@@ -444,7 +584,7 @@ Esta distribución evidencia una diferencia marcada entre participantes, especia
 
 ---
 
-### 4. Dataset aumentado
+### 5. Dataset aumentado
 
 Se generaron tres muestras sintéticas por cada muestra real, únicamente en el espacio de características:
 
@@ -462,7 +602,7 @@ El dataset final para entrenamiento y Edge Impulse tuvo:
 
 ---
 
-### 5. Validación MLP local — LOSO
+### 6. Validación MLP local — LOSO
 
 Los resultados de la validación leave-one-subject-out fueron:
 
@@ -483,7 +623,7 @@ El modelo obtuvo buen desempeño relativo en P01 y accuracy aceptable en P02, pe
 
 ---
 
-### 6. Interpretación de la app
+### 7. Interpretación de la app
 
 En la app final, pueden aparecer casos donde el recovery score y la MLP no coinciden. Esto no debe presentarse como una falla del sistema, sino como una consecuencia esperable de trabajar con un modelo exploratorio entrenado con una muestra pequeña.
 
@@ -491,7 +631,7 @@ La interpretación jerárquica propuesta es:
 
 1. **Salida principal:** recovery score y clasificación por regla.
 2. **Salida secundaria:** predicción MLP exploratoria.
-3. **Contexto:** puntaje PSS.
+3. **Contexto:** puntaje PSS-14.
 
 Cuando exista discordancia, debe priorizarse el recovery score, ya que es la métrica fisiológica definida explícitamente a partir del retorno hacia el basal.
 
