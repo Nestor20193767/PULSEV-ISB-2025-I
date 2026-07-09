@@ -1,0 +1,10 @@
+participant,state,file,duration_sec,duration_min,n_peaks_total,expected_windows_by_duration,valid_windows_extracted,estimated_HR_global_bpm
+P01,basal,P01_basal_ECGv2.txt,302.7,5.045,363,19,19,71.95242814667989
+P01,cognitivo,P01_cognitiva_ECGv2.txt,305.1,5.085,380,19,19,74.72959685349065
+P01,recuperacion,P01_recuperacion_ECGv2.txt,305.4,5.09,363,19,19,71.3163064833006
+P02,basal,P02_basal_ECGv2.h5.txt,306.15,5.1025,400,19,19,78.39294463498287
+P02,cognitivo,P02_cognitiva_ECGv2.h5.txt,263.4,4.39,363,16,16,82.68792710706151
+P02,recuperacion,P02_recuperacion_ECGv2.txt.txt,302.7,5.045,390,19,19,77.30426164519326
+P03,basal,P03_basal_ECGv2.txt,222.6,3.71,247,13,13,66.57681940700809
+P03,cognitivo,P03_cognitiva_ECGv2.txt,235.95,3.9324999999999997,286,14,14,72.72727272727273
+P03,recuperacion,P03_recuperacion_ECGv2.txt,274.5,4.575,318,17,17,69.50819672131148
