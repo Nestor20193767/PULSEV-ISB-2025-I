@@ -653,13 +653,14 @@ Los codigos del proyecto y del App se encuentran en la siguiente direccion de ca
 ## Bibliografía de autores
 
 ### Néstor Allende
-Estudiante de Ingeniería Biomédica con interés en procesamiento de señales fisiológicas, análisis de datos biomédicos y aplicaciones de aprendizaje automático en salud digital. En este proyecto participó en el desarrollo del repositorio, organización del informe y procesamiento computacional.
+Soy un apasionado por la ingeniería biomédica, siempre con ganas de aprender cómo la tecnología puede ayudarnos a entender mejor el cuerpo humano.
+Disfruto mucho analizando señales fisiológicas y desarrollando sistemas que, de manera práctica, puedan ser útiles para cuidar la salud.
 
 ### Ana Angulo
-Estudiante de Ingeniería Biomédica con interés en instrumentación, adquisición de señales biomédicas y evaluación experimental. En este proyecto participó en el diseño del protocolo, adquisición de señales ECG y validación del procedimiento experimental.
+Ana Angulo es estudiante de Ingeniería Biomédica con interés en el procesamiento de señales biomédicas, la inteligencia artificial y la investigación en tecnologías para la salud.
 
 ### Luis/Bryan Loayza
-Estudiante de Ingeniería Biomédica con interés en procesamiento de señales biomédicas, machine learning y desarrollo de aplicaciones interactivas. En este proyecto participó en el pipeline de HRV, cálculo del recovery score, entrenamiento MLP local, integración en Streamlit y análisis de resultados.
+Estudiante de Ingeniería Biomédica con interés en procesamiento de señales biomédicas, desarrollo de aplicaciones interactivas, impresion 3D, prototipado y la investigación en tecnologías para la salud. 
 
 ### Natalie Sante
 Estudiante de Ingeniería Biomédica con interés en análisis fisiológico, bienestar académico y aplicaciones de biosensores. En este proyecto participó en la organización experimental, revisión de resultados y discusión de la interpretación fisiológica.
