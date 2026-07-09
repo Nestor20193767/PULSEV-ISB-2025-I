@@ -578,6 +578,11 @@ La interpretación jerárquica propuesta es:
 
 Cuando exista discordancia, debe priorizarse el recovery score, ya que es la métrica fisiológica definida explícitamente a partir del retorno hacia el basal.
 
+### Codigos del Proyecto
+Los codigos del proyecto y del App se encuentran en la siguiente direccion de carpeta
+
+[Codigos del Proyecto](Codigos)
+
 ---
 
 ## Conclusiones
